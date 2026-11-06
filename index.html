@@ -224,7 +224,116 @@ function roadSegments(world){
  }
  return list;
 }
+function normalizeBridgeEvidence(w){
+ let changed=false,pending=false;
+ for(const r of w.roads){
+  const wasBridge=Boolean(r.bridge);
+  if(typeof r.bridgeMapped==='boolean'){
+   if(Boolean(r.bridge)!==r.bridgeMapped)changed=true;r.bridge=r.bridgeMapped;
+  }else if(r.isViaduct){
+   // Old code set this flag only when inventing a viaduct from a road crossing.
+   r.bridge=false;r.bridgeMapped=false;r.bridgeEvidence='legacy-inference-disabled';r.isViaduct=false;r.layer=0;changed=true;
+  }else if(r.bridge){pending=true;}
+  else{r.bridgeMapped=false;}
+  if(!r.bridge){
+   for(const p of r.points){if(p._elev||p._atGround)changed=true;delete p._elev;delete p._atGround;delete p._layer;}
+   if(wasBridge&&r.points.length>2){
+    const points=[];
+    for(const p of r.points){
+     while(points.length>1){
+      const a=points[points.length-2],b=points[points.length-1];
+      const q=squaredDistPointSeg(b.x,b.y,a.x,a.y,p.x,p.y);
+      if(q.d2>1e-10||q.t<=0||q.t>=1)break;points.pop();
+     }
+     points.push(p);
+    }
+    r.points=points;r.bbox=bboxOf(points);
+   }
+   r.overWater=false;r.isViaduct=false;
+  }
+ }
+ w.bridgeEvidenceVersion=1;w.bridgeNeedsEvidence=pending;
+ if(changed){w._bridgesPrepared=false;w.bridgePiers=[];w.pierGrid=null;}
+ return changed;
+}
+function prepareGroundRoadTopology(w){
+ const segments=[];
+ for(const road of w.roads){
+  if(road.bridge||road.tunnel)continue;
+  for(let i=0;i<road.points.length-1;i++){
+   const a=road.points[i],b=road.points[i+1],len=hypot(b.x-a.x,b.y-a.y);if(len<.01)continue;
+   segments.push({road,index:i,a,b,len,cuts:[0,1],number:segments.length,bbox:{minX:Math.min(a.x,b.x)-.02,minY:Math.min(a.y,b.y)-.02,maxX:Math.max(a.x,b.x)+.02,maxY:Math.max(a.y,b.y)+.02}});
+  }
+ }
+ const grid=makeGrid(segments,90),byRoad=new Map();
+ for(const s of segments){
+  for(const o of searchGrid(grid,s.bbox)){
+   if(o.number<=s.number||o.road===s.road||(o.road.layer||0)!==(s.road.layer||0))continue;
+   const ax=s.b.x-s.a.x,ay=s.b.y-s.a.y,bx=o.b.x-o.a.x,by=o.b.y-o.a.y,den=ax*by-ay*bx;if(Math.abs(den)<1e-8)continue;
+   const dx=o.a.x-s.a.x,dy=o.a.y-s.a.y,t=(dx*by-dy*bx)/den,u=(dx*ay-dy*ax)/den;
+   if(t<-.000001||t>1.000001||u<-.000001||u>1.000001)continue;
+   if(t>.000001&&t<.999999)s.cuts.push(t);if(u>.000001&&u<.999999)o.cuts.push(u);
+  }
+  // Long straight roads must remain navigable after removing the fake bridge subdivision.
+  const n=Math.ceil(s.len/160);for(let i=1;i<n;i++)s.cuts.push(i/n);
+  if(!byRoad.has(s.road))byRoad.set(s.road,[]);byRoad.get(s.road).push(s);
+ }
+ for(const road of w.roads){
+  if(!road.bridge||road.points.length<2)continue;
+  for(const p of [road.points[0],road.points[road.points.length-1]]){
+   if((p._elev||0)>.6)continue;
+   for(const s of searchGrid(grid,nearBox(p.x,p.y,.1))){
+    const q=squaredDistPointSeg(p.x,p.y,s.a.x,s.a.y,s.b.x,s.b.y);
+    if(q.d2<.0001&&q.t>.000001&&q.t<.999999)s.cuts.push(q.t);
+   }
+  }
+ }
+ const navigationPoints=new Map();
+ for(const [road,list] of byRoad){
+  const points=[];
+  for(const s of list){
+   s.cuts.sort((a,b)=>a-b);let last=-1;
+   for(const t of s.cuts){
+    if(t-last<.000001)continue;last=t;
+    const p=t===0?s.a:t===1?s.b:{x:lerp(s.a.x,s.b.x,t),y:lerp(s.a.y,s.b.y,t)};
+    if(!points.length||hypot(points[points.length-1].x-p.x,points[points.length-1].y-p.y)>.00001)points.push(p);
+   }
+  }
+  navigationPoints.set(road,points);
+ }
+ return navigationPoints;
+}
+function confirmCachedBridgeEvidence(w,fresh){
+ const pending=w.roads.filter(r=>r.bridge&&typeof r.bridgeMapped!=='boolean');if(!pending.length||!fresh?.roads?.length)return 0;
+ const freshSegments=roadSegments(fresh),grid=makeGrid(freshSegments,90);let confirmed=0;
+ for(const r of pending){
+  const flags=new Set();let covered=true;
+  for(let i=0;i<r.points.length-1;i++){
+   const a=r.points[i],b=r.points[i+1],len=hypot(b.x-a.x,b.y-a.y);if(len<.01)continue;let matched=false;
+   const box={minX:Math.min(a.x,b.x)-4,minY:Math.min(a.y,b.y)-4,maxX:Math.max(a.x,b.x)+4,maxY:Math.max(a.y,b.y)+4};
+   for(const s of searchGrid(grid,box)){
+    if(s.road.type!==r.type||typeof s.road.bridgeMapped!=='boolean')continue;
+    const align=Math.abs(((b.x-a.x)*(s.b.x-s.a.x)+(b.y-a.y)*(s.b.y-s.a.y))/(len*s.len));if(align<.97)continue;
+    if(segSegDistanceSq(a,b,s.a,s.b)>16)continue;
+    flags.add(s.road.bridgeMapped);
+    const q=squaredDistPointSeg((a.x+b.x)*.5,(a.y+b.y)*.5,s.a.x,s.a.y,s.b.x,s.b.y);if(q.d2<=16)matched=true;
+   }
+   if(!matched){covered=false;break;}
+  }
+  if(covered&&flags.size===1){r.bridgeMapped=[...flags][0];r.bridgeEvidence='mapped-cache-refresh';confirmed++;}
+ }
+ if(!confirmed)return 0;
+ normalizeBridgeEvidence(w);w._bridgesPrepared=false;prepareBridgesAndWaterways(w);w.roadGrid=makeGrid(w.roads,120);w.graph=makeGraph(w.roads);
+ if(state.world===w){
+  for(const car of state.traffic){car.onBridge=Boolean(car.way?.bridge);if(!car.onBridge)car.bridgeElev=0;}
+  for(const actor of [state.player,...state.parkedCars]){const road=getRoad(actor.x,actor.y,actor.angle,actor.onBridge);actor.onBridge=Boolean(road?.edge.bridge&&road.off<=3.2);actor.bridgeElev=actor.onBridge?road.elev||0:0;}
+  if(state.navGoal)state.route=computeRoute(state.player.x,state.player.y,state.navGoal);
+ }
+ return confirmed;
+}
+
 function prepareBridgesAndWaterways(world){
+ normalizeBridgeEvidence(world);
  world.waterways=world.waterways||[];
  for(const ww of world.waterways){if(!ww.bbox&&ww.points?.length)ww.bbox=bboxOf(ww.points);}
  const waterPolys=world.water||[];
@@ -258,82 +367,7 @@ function prepareBridgesAndWaterways(world){
   return;
  }
  world._bridgesPrepared=true;
- const segCrossesWater=(a,b)=>{
-  const mid={x:(a.x+b.x)*0.5,y:(a.y+b.y)*0.5};
-  if(pointOverWater(mid.x,mid.y))return true;
-  const bb={minX:Math.min(a.x,b.x)-4,minY:Math.min(a.y,b.y)-4,maxX:Math.max(a.x,b.x)+4,maxY:Math.max(a.y,b.y)+4};
-  if(wwGrid){
-   for(const ws of searchGrid(wwGrid,bb)){if(segmentInteriorCross(a,b,ws.a,ws.b,0.01))return true;}
-  }
-  if(waterGrid){
-   for(const wp of searchGrid(waterGrid,bb)){
-    for(let k=0;k<wp.points.length;k++){
-     if(segmentInteriorCross(a,b,wp.points[k],wp.points[(k+1)%wp.points.length],0.01))return true;
-    }
-   }
-  }
-  return false;
- };
-
- // 1. Detecta travessias sobre rios/lagos em vias que não vieram com brunnel=bridge separado
- const expandedRoads=[];
- for(const r of world.roads){
-  if(r.bridge||r.tunnel||r.type==='pedestrian'||r.points.length<2){expandedRoads.push(r);continue;}
-  // Subdivide segmentos muito longos que cruzem água para isolar apenas o vão da ponte
-  const pts=r.points;
-  const spans=[];
-  for(let i=0;i<pts.length-1;i++){
-   const a=pts[i],b=pts[i+1],len=hypot(b.x-a.x,b.y-a.y);
-   const crosses=segCrossesWater(a,b);
-   if(crosses&&len>64){
-    // Isola o trecho molhado com cabeceiras de 10m
-    const steps=Math.ceil(len/8);
-    let firstW=-1,lastW=-1;
-    for(let s=0;s<=steps;s++){
-     const t=s/steps,px=lerp(a.x,b.x,t),py=lerp(a.y,b.y,t);
-     if(pointOverWater(px,py)){if(firstW<0)firstW=t;lastW=t;}
-    }
-    if(firstW>=0){
-     const t0=clamp(firstW-10/len,0,1),t1=clamp(lastW+10/len,0,1);
-     const p0={x:lerp(a.x,b.x,t0),y:lerp(a.y,b.y,t0)},p1={x:lerp(a.x,b.x,t1),y:lerp(a.y,b.y,t1)};
-     if(t0>0.04)spans.push({a,b:p0,w:false});
-     spans.push({a:t0>0.04?p0:a,b:t1<0.96?p1:b,w:true});
-     if(t1<0.96)spans.push({a:p1,b,w:false});
-     continue;
-    }
-   }
-   spans.push({a,b,w:crosses});
-  }
-  if(!spans.some(s=>s.w)){expandedRoads.push(r);continue;}
-  let curPts=[spans[0].a,spans[0].b],curW=spans[0].w;
-  for(let i=1;i<spans.length;i++){
-   if(spans[i].w===curW){curPts.push(spans[i].b);}
-   else{
-    expandedRoads.push({...r,points:curPts,bridge:curW,overWater:curW,layer:curW?1:0,bbox:bboxOf(curPts)});
-    curPts=[spans[i].a,spans[i].b];curW=spans[i].w;
-   }
-  }
-  expandedRoads.push({...r,points:curPts,bridge:curW,overWater:curW,layer:curW?1:0,bbox:bboxOf(curPts)});
- }
- world.roads=expandedRoads;
-
- // 2. Detecta viadutos/passagens superiores implícitas onde rodovias cruzam outras vias sem nó comum
- const rawSegs=roadSegments(world),rawGrid=makeGrid(rawSegs,75);
- for(const s of rawSegs){
-  if(s.bridge||s.tunnel)continue;
-  if(!isHighwayType(s.road.type)&&s.road.type!=='primary')continue;
-  for(const o of searchGrid(rawGrid,s.bbox)){
-   if(o===s||o.road===s.road||o.bridge||o.tunnel)continue;
-   const hit=segmentInteriorCross(s.a,s.b,o.a,o.b,0.06);
-   if(!hit)continue;
-   const rS=roadHierarchyRank(s.road.type)+(s.layer||0)*3;
-   const rO=roadHierarchyRank(o.road.type)+(o.layer||0)*3;
-   if(rS>rO||(rS===rO&&s.road.width>o.road.width)){
-    s.road.bridge=true;s.road.isViaduct=true;s.road.layer=Math.max(1,s.road.layer||1);
-    break;
-   }
-  }
- }
+ // Crossings and nearby water never establish a bridge. Only mapped bridge evidence does.
 
  // 3. Conecta cabeceiras de pontes/viadutos exatamente aos nós das vias de solo (elimina degraus de MVT!) e subdivide rampas suaves
  const gVertCells=new Map(),gCellSz=12;
@@ -364,6 +398,7 @@ function prepareBridgesAndWaterways(world){
   return best;
  };
  const touchesGroundRoad=(pt,isEndpoint)=>{
+  if(!isEndpoint)return false; // A road passing below a bridge is not a ramp connection.
   const gv=findNearGroundVert(pt,isEndpoint?3.4:1.8);
   if(gv){
    if(isEndpoint){pt.x=gv.x;pt.y=gv.y;}
@@ -530,7 +565,7 @@ function getBridgeElevationAt(x,y,preferBridge=true){
 function closestRoadPoint(x,y){const w=state.world;let best=null,bd=Infinity;for(const s of w.segments){const q=squaredDistPointSeg(x,y,s.a.x,s.a.y,s.b.x,s.b.y);if(q.d2<bd){bd=q.d2;best={...q,segment:s}}}return best}
 function getBuildingCollision(x,y,r=1.9){const w=state.world;if(!w)return false;const p={x,y};for(const b of searchGrid(w.buildingGrid,nearBox(x,y,r+1))){if(pointInPoly(p,b.points))return true;for(let i=0;i<b.points.length;i++){const a=b.points[i],c=b.points[(i+1)%b.points.length];if(squaredDistPointSeg(x,y,a.x,a.y,c.x,c.y).d2<r*r)return true}}return false}
 function getPierCollision(x,y,r=1.35){const w=state.world;if(!w?.pierGrid)return false;for(const pier of searchGrid(w.pierGrid,nearBox(x,y,r+8))){const nx=-pier.uy,ny=pier.ux,spanOff=Math.max(1.8,pier.width*0.32);for(const s of [-1,1]){const bx=pier.x+nx*s*spanOff,by=pier.y+ny*s*spanOff;if((x-bx)**2+(y-by)**2<(r+0.8)**2)return true}}return false}
-function makeGraph(roads){const nodes=new Map;const getNode=(p,road)=>{const elev=p._elev||0;const isElevBridge=Boolean(road.bridge&&elev>0.6);const rLayer=p._layer||(isElevBridge?1:0);const key=p.x.toFixed(2)+','+p.y.toFixed(2)+(isElevBridge?'|B':'');if(!nodes.has(key))nodes.set(key,{x:p.x,y:p.y,_elev:elev,key,edges:[],layer:rLayer});else if(elev>(nodes.get(key)._elev||0))nodes.get(key)._elev=elev;return nodes.get(key)};for(const road of roads){for(let i=1;i<road.points.length;i++){const a=getNode(road.points[i-1],road),b=getNode(road.points[i],road),dist=hypot(a.x-b.x,a.y-b.y);if(dist<.25||dist>400)continue;const f={from:a,to:b,dist,way:road,angle:Math.atan2(b.y-a.y,b.x-a.x)},r={from:b,to:a,dist,way:road,angle:Math.atan2(a.y-b.y,a.x-b.x)};if(road.oneway!==-1)a.edges.push(f);if(road.oneway!==1)b.edges.push(r)}}return [...nodes.values()]}
+function makeGraph(roads){const navigationPoints=prepareGroundRoadTopology({roads});const nodes=new Map;const getNode=(p,road)=>{const elev=p._elev||0;const isElevBridge=Boolean(road.bridge&&elev>0.6);const rLayer=p._layer||(isElevBridge?1:0);const key=p.x.toFixed(2)+','+p.y.toFixed(2)+(isElevBridge?'|B':'');if(!nodes.has(key))nodes.set(key,{x:p.x,y:p.y,_elev:elev,key,edges:[],layer:rLayer});else if(elev>(nodes.get(key)._elev||0))nodes.get(key)._elev=elev;return nodes.get(key)};for(const road of roads){const points=navigationPoints.get(road)||road.points;for(let i=1;i<points.length;i++){const a=getNode(points[i-1],road),b=getNode(points[i],road),dist=hypot(a.x-b.x,a.y-b.y);if(dist<.25||dist>400)continue;const f={from:a,to:b,dist,way:road,angle:Math.atan2(b.y-a.y,b.x-a.x)},r={from:b,to:a,dist,way:road,angle:Math.atan2(a.y-b.y,a.x-b.x)};if(road.oneway!==-1)a.edges.push(f);if(road.oneway!==1)b.edges.push(r)}}return [...nodes.values()]}
 function computeRoute(fromX,fromY,goal){const w=state.world;if(!w||!w.graph.length)return null;let bestS=null,bestT=null,bs=Infinity,bt=Infinity;for(const n of w.graph){const ds=(n.x-fromX)**2+(n.y-fromY)**2,dt=(n.x-goal.x)**2+(n.y-goal.y)**2;if(ds<bs){bs=ds;bestS=n}if(dt<bt){bt=dt;bestT=n}}if(!bestS||!bestT)return null;const heap=[],dist=new Map([[bestS.key,0]]),prev=new Map;function push(item){heap.push(item);let i=heap.length-1;while(i){const j=(i-1)>>1;if(heap[j][0]<=heap[i][0])break;[heap[j],heap[i]]=[heap[i],heap[j]];i=j}}function pop(){const a=heap[0],e=heap.pop();if(heap.length){heap[0]=e;let i=0;while(true){let j=i*2+1,k=j+1;if(j>=heap.length)break;if(k<heap.length&&heap[k][0]<heap[j][0])j=k;if(heap[i][0]<=heap[j][0])break;[heap[i],heap[j]]=[heap[j],heap[i]];i=j}}return a}push([0,bestS]);let steps=0;while(heap.length&&steps++<30000){const [d,n]=pop();if(d!==(dist.get(n.key)??Infinity))continue;if(n.key===bestT.key)break;for(const e of n.edges){const nd=d+e.dist;if(nd<(dist.get(e.to.key)??Infinity)){dist.set(e.to.key,nd);prev.set(e.to.key,n.key);push([nd,e.to])}}}if(!dist.has(bestT.key))return null;const byKey=new Map(w.graph.map(n=>[n.key,n]));const path=[];let n=bestT;for(let k=0;k<15000;k++){path.push({x:n.x,y:n.y});if(n.key===bestS.key)break;const pr=byKey.get(prev.get(n.key));if(!pr)break;n=pr}path.reverse();return {path,length:dist.get(bestT.key)+Math.sqrt(bs)+Math.sqrt(bt)}}
 function setDestination(x,y){const w=state.world;if(!w)return;state.mission=null;$('missionCountdown').classList.add('hidden');$('navType').textContent='DESTINO DEFINIDO';if(w.tileFallback){state.navGoal={x,y};state.route=null;$('navigation').classList.remove('hidden');toast('Destino marcado no mapa real. Roteamento só fica disponível com a geometria das ruas.');return}const p=closestRoadPoint(x,y);if(!p){toast('Não encontrei rua perto desse ponto');return}state.navGoal={x:p.x,y:p.y};state.route=computeRoute(state.player.x,state.player.y,state.navGoal);$('navigation').classList.remove('hidden');toast('Destino definido. Siga a linha verde no mapa!');state.routeTimer=0}
 function startMission(){if(!state.world||state.loading||state.paused)return;if(state.mission){toast('Você já está em uma entrega. Siga a rota verde no minimapa.');return}const w=state.world,p=state.player;if(!w?.graph?.length)return;let chosen=null;for(let i=0;i<140;i++){const n=w.graph[Math.floor(hash(i+Math.floor(state.now*13),i+71)*w.graph.length)];if(!n||hypot(n.x-p.x,n.y-p.y)<210||hypot(n.x-p.x,n.y-p.y)>900)continue;const rt=computeRoute(p.x,p.y,{x:n.x,y:n.y});if(!rt||rt.length<220||rt.length>1800)continue;if(!chosen||Math.abs(rt.length-570)<Math.abs(chosen.route.length-570))chosen={point:n,route:rt};if(Math.abs(rt.length-570)<50)break}if(!chosen)return toast('Não encontrei um destino acessível nessa região. Explore mais ruas.');state.navGoal={x:chosen.point.x,y:chosen.point.y};state.route=chosen.route;const time=clamp(Math.floor(chosen.route.length/8+55),75,300);state.mission={remaining:time,total:time,lateNotified:false};state.routeTimer=2;$('navType').textContent='ENTREGA EM ANDAMENTO';$('missionCountdown').classList.remove('hidden');$('navigation').classList.remove('hidden');toast('⚑ NOVA ENTREGA! Siga a rota e chegue antes do tempo acabar.',4200)}
@@ -1931,7 +1966,7 @@ function decorateWorld(w){if(!w.real||w.tileFallback)return w;
  const orderedSegs=[...segs].sort((a,b)=>b.len-a.len);
  let synthCount=0,seq=1;
  for(const seg of orderedSegs){
-  if(synthCount>2800)break;
+  if(synthCount>=4200)break;
   const rtype=seg.road.type;
   if(seg.bridge||seg.tunnel||isHighwayType(rtype)||isDirtRoad(seg.road)||rtype==='service'||rtype==='pedestrian')continue;
   if(seg.len<18)continue;
@@ -2022,7 +2057,7 @@ function decorateWorld(w){if(!w.real||w.tileFallback)return w;
     const lotW=spanLen/nLots;
 
     for(let k=0;k<nLots;k++){
-     if(synthCount>4200)break;
+     if(synthCount>=4200)break;
      const uLot0=uStart+k*lotW,uLot1=uStart+(k+1)*lotW;
      let localMinD=21.0;
      for(const pr of sp.probes){
@@ -2251,11 +2286,11 @@ function osmToWorld(json,centerLat,centerLon,place){
   if(publicType&&(!tags.highway||tags.highway==='pedestrian')){addPublic(pts,tags,id);continue}
   if(tags.highway&&roadWidths[tags.highway]&&!(tags.highway==='pedestrian'&&tags.area==='yes')){
    const type=tags.highway,lanes=Math.max(0,parseInt(tags.lanes||'0')||0),width=Math.max(roadWidths[type],lanes*3.5+(isHighwayType(type)?3.2:0));
-   const isBridge=Boolean((tags.bridge&&tags.bridge!=='no')||tags.man_made==='bridge');
+   const isBridge=Boolean((tags.bridge&&!/^(no|false|0)$/i.test(String(tags.bridge)))||tags.man_made==='bridge');
    const isTunnel=Boolean(tags.tunnel&&tags.tunnel!=='no');
    const layer=parseInt(tags.layer||'0',10)||0;
    const unpaved=isUnpavedRoad(type,tags.surface,tags.tracktype);
-   roads.push({points:pts,width:clamp(width,5,28),type,unpaved,name:tags.name||'',oneway:tags.oneway==='yes'||tags.oneway==='1'?1:tags.oneway==='-1'?-1:0,bridge:isBridge||layer>=1,tunnel:isTunnel||layer<0,layer});continue;
+   roads.push({points:pts,width:clamp(width,5,28),type,unpaved,name:tags.name||'',oneway:tags.oneway==='yes'||tags.oneway==='1'?1:tags.oneway==='-1'?-1:0,bridge:isBridge,bridgeMapped:isBridge,bridgeEvidence:'OSM bridge tag',tunnel:isTunnel||layer<0,layer});continue;
   }
   if(tags.waterway&&/^(river|canal|stream|drain)$/.test(tags.waterway)){
    const defW=tags.waterway==='river'?18:tags.waterway==='canal'?11:tags.waterway==='stream'?6.5:4.5;
@@ -2440,7 +2475,7 @@ function materializeCommercialPOIs(w){
   updateCityCounters();
  }
 }
-function vectorForCache(w){return{name:w.name,real:true,vectorProvider:w.vectorProvider||'OpenFreeMap',roads:w.roads,buildings:w.buildings.filter(b=>hasBuildingEvidence(b)),parks:w.parks,water:w.water,waterways:w.waterways||[],trees:w.trees.filter(t=>!t.estimated),lights:w.lights,pois:w.pois||[],spawnX:w.spawnX||0,spawnY:w.spawnY||0,lat:w.lat,lon:w.lon,bounds:w.bounds,raw:null,occupancyAreas:w.occupancyAreas||[],occupancyChecks:w.occupancyChecks||[],occupancyPatchVersion:w.occupancyPatchVersion||0,overtureCount:w.overtureCount||0}}
+function vectorForCache(w){return{name:w.name,real:true,vectorProvider:w.vectorProvider||'OpenFreeMap',roads:w.roads,buildings:w.buildings.filter(b=>hasBuildingEvidence(b)),parks:w.parks,water:w.water,waterways:w.waterways||[],trees:w.trees.filter(t=>!t.estimated),lights:w.lights,pois:w.pois||[],spawnX:w.spawnX||0,spawnY:w.spawnY||0,lat:w.lat,lon:w.lon,bounds:w.bounds,raw:null,occupancyAreas:w.occupancyAreas||[],occupancyChecks:w.occupancyChecks||[],occupancyPatchVersion:w.occupancyPatchVersion||0,bridgeEvidenceVersion:w.bridgeEvidenceVersion||0,bridgeNeedsEvidence:Boolean(w.bridgeNeedsEvidence),overtureCount:w.overtureCount||0}}
 function runWhenIdle(callback){if('requestIdleCallback' in window)requestIdleCallback(callback,{timeout:1100});else setTimeout(callback,120)}
 function cacheRealWorld(key,world){runWhenIdle(()=>{if(world?.real&&!world.tileFallback)void dbSet(key,{vector:vectorForCache(world),saved:Date.now()})})}
 function followUpBuildings(world,map,signal,key,serial){
@@ -2517,11 +2552,12 @@ async function loadReal(lat,lon,name){
    world.name=name;setWorld(world);toast('Ruas reais recuperadas do cache. Você já pode dirigir!',3300);
    // O cache de versões anteriores muitas vezes não tinha os prédios Overture.
    // Reconsulta opcional sem bloquear a direção, sem trocar ou refazer as ruas.
-   if(fromVector&&(!(world.overtureCount>0)||world.occupancyPatchVersion!==1)&&String(world.vectorProvider||'').includes('OpenFreeMap')){
+   if(fromVector&&(!(world.overtureCount>0)||world.occupancyPatchVersion!==1||world.bridgeNeedsEvidence)&&String(world.vectorProvider||'').includes('OpenFreeMap')){
     setTimeout(async()=>{
      if(controller.signal.aborted||serial!==citySerial||state.world!==world)return;
      try{const cachedMap=await initOpenFreeMap(lat,lon,controller.signal);
       if(controller.signal.aborted||serial!==citySerial||state.world!==world){stopOpenFreeMap();return}
+      const freshRoadData=openFreeGeometry(cachedMap,lat,lon,name);if(freshRoadData&&confirmCachedBridgeEvidence(world,freshRoadData))cacheRealWorld(cacheKey,world);
       followUpBuildings(world,cachedMap,controller.signal,cacheKey,serial);
      }catch(e){console.info('Edifícios extras não puderam ser obtidos do cache:',e.message);stopOpenFreeMap()}
     },350);
@@ -2608,7 +2644,7 @@ function closeStreamWorkers(){
 }
 function makeStreamWorker(){
  if(streamWorld.worker)return streamWorld.worker;
- const fn=[clamp,lerp,rnd,hash,pointInPoly,bboxOf,intersects,squaredDistPointSeg,polygonArea,signedPolygonArea,isHighwayType,isLinkType,isUnpavedRoad,isDirtRoad,roadHierarchyRank,sidewalkHalfExtentForType,roadCorridorMargin,segmentInteriorCross,makeGrid,searchGrid,nearBox,roadSegments,makeGraph,prepareBridgesAndWaterways,shiftPolygon,polygonCenter,clipAgainstLine,segSegDistanceSq,closeToRoadCorridor,keepFootprintOffRoad,findClosestFrontageSegment,simplifyAndOrientFootprint,rectifyAndAlignBuilding,polygonsSubstantiallyOverlap,polygonsOverlapOrClose,makeOrientedLotQuad,looksLikeSquareName,attachSquarePoisToPublicSpaces,pickTreeVariant,canPlaceTreeAt,seedLandcoverTrees,filterAndIndexTrees,prepareWorld,decorateWorld,hasBuildingEvidence,occupancyContainsPoint,occupancyOverlapsFootprint,prepareOccupancyIndex,occupancyBlocksGenerated,urbanOccupancyNear,occupancyKind,joinOccupancyRings,collectOccupancyAreas];
+ const fn=[clamp,lerp,rnd,hash,pointInPoly,bboxOf,intersects,squaredDistPointSeg,polygonArea,signedPolygonArea,isHighwayType,isLinkType,isUnpavedRoad,isDirtRoad,roadHierarchyRank,sidewalkHalfExtentForType,roadCorridorMargin,segmentInteriorCross,makeGrid,searchGrid,nearBox,roadSegments,makeGraph,prepareBridgesAndWaterways,normalizeBridgeEvidence,prepareGroundRoadTopology,shiftPolygon,polygonCenter,clipAgainstLine,segSegDistanceSq,closeToRoadCorridor,keepFootprintOffRoad,findClosestFrontageSegment,simplifyAndOrientFootprint,rectifyAndAlignBuilding,polygonsSubstantiallyOverlap,polygonsOverlapOrClose,makeOrientedLotQuad,looksLikeSquareName,attachSquarePoisToPublicSpaces,pickTreeVariant,canPlaceTreeAt,seedLandcoverTrees,filterAndIndexTrees,prepareWorld,decorateWorld,hasBuildingEvidence,occupancyContainsPoint,occupancyOverlapsFootprint,prepareOccupancyIndex,occupancyBlocksGenerated,urbanOccupancyNear,occupancyKind,joinOccupancyRings,collectOccupancyAreas];
  const source=`'use strict';const hypot=Math.hypot,TAU=Math.PI*2,WALKWAY_HALF_EXTENT=${WALKWAY_HALF_EXTENT},BUILDING_EDGE_CLEARANCE=${BUILDING_EDGE_CLEARANCE},roadWidths=${JSON.stringify(roadWidths)};\n`+
   fn.map(f=>f.toString().startsWith('function')?f.toString():`const ${f.name}=${f.toString()};`).join('\n')+`\nfunction dedupePois(list){return list||[]}\nself.onmessage=e=>{const {id,world,occupancyBuffer,originLat,originLon}=e.data;if(occupancyBuffer){try{const raw=JSON.parse(new TextDecoder().decode(occupancyBuffer));postMessage({id,ok:true,world:{occupancyAreas:collectOccupancyAreas(raw,originLat,originLon)}})}catch(err){postMessage({id,ok:false,error:String(err?.message||err)})}return;}try{decorateWorld(world);prepareWorld(world);postMessage({id,ok:true,world:{roads:world.roads,buildings:world.buildings,parks:world.parks,water:world.water,waterways:world.waterways||[],bridgePiers:world.bridgePiers||[],trees:world.trees,lights:world.lights,pois:world.pois,bounds:world.bounds,mappedBuildings:world.mappedBuildings,occupancyAreas:world.occupancyAreas||[],occupancyChecks:world.occupancyChecks||[]}})}catch(err){postMessage({id,ok:false,error:String(err?.message||err)})}};`;
  const blob=new Blob([source],{type:'application/javascript'}),url=URL.createObjectURL(blob);
@@ -5560,7 +5596,8 @@ function drawBuildingsAndTrees(){
  _depthQueue.length=0;
  for(let i=0;i<visBuildings.length;i++){
   const b=visBuildings[i];
-  if(!boxVisible(b.bbox,26))continue;
+  const home=!b.landmark&&b.points.length===4&&(b.height||4.5)<8.8&&['house','residential','yes','building'].includes(b.kind||'yes');
+  if(!boxVisible(b.bbox,home?-16:26))continue; // state.view adds 28m: low houses retain 12m for all walls, roofs, balconies and shadows.
   const sk=b.sortK!==undefined?b.sortK:(b.sortK=(b.bbox.maxY+b.bbox.minY)*0.5-(b.bbox.maxX+b.bbox.minX)*0.08);
   _depthQueue.push({isTree:false,sortK:sk,obj:b});
  }
@@ -5594,6 +5631,7 @@ function drawStreetFurniture(){
   const n=Math.floor(s.len/spacing);
   for(let i=1;i<=n;i++){
    const t=i/(n+1),x=lerp(s.a.x,s.b.x,t),y=lerp(s.a.y,s.b.y,t),rVal=hash(Math.floor(x),Math.floor(y),77);
+   if(!boxVisible(nearBox(x,y,24)))continue; // Outside the viewport, including the complete pole, shadow and light halo.
    const side=rVal>.5?1:-1,dist=s.width/2+(isHwy?1.5:0.85),px=x+nx*dist*side,py=y+ny*dist*side;
    const poleH=isHwy?5.2:4.1;
    const topX=px+EXTRUDE_X*poleH,topY=py+EXTRUDE_Y*poleH;
@@ -5972,11 +6010,11 @@ function openFreeGeometry(map,lat,lon,name){
   const isRamp=props.ramp===1||props.ramp==='yes'||/_link/.test(typeString);
   const base=/^(motorway|trunk|primary|secondary|tertiary|service|living_street|unclassified|track)/.test(typeString)?typeString.replace(/_link.*/,''):'residential';
   const type=(isRamp&&/^(motorway|trunk|primary|secondary|tertiary)$/.test(base))?(base+'_link'):base;
-  const bridge=props.brunnel==='bridge'||Number(props.layer)>=1;
+  const bridge=props.brunnel==='bridge';
   const oneway=(props.oneway===1||props.oneway==='yes'||type==='motorway'||type==='motorway_link')?1:(props.oneway===-1?-1:0);
   const unpaved=!bridge&&isUnpavedRoad(type,props.surface,props.tracktype);
   const width=roadWidths[type]||(unpaved?6.8:9.2);
-  roads.push({points:pts,width,type,name:String(props.name||props.name_en||'').slice(0,90),oneway,bridge,tunnel:false,layer:Number(props.layer||0),unpaved});
+  roads.push({points:pts,width,type,name:String(props.name||props.name_en||'').slice(0,90),oneway,bridge,bridgeMapped:bridge,bridgeEvidence:'OpenFreeMap brunnel',tunnel:false,layer:Number(props.layer||0),unpaved});
  }else if(kind==='waterway'){
   const cls=String(props.class||props.subclass||'stream').toLowerCase();
   if(/^(river|canal|stream|drain)$/.test(cls)){
