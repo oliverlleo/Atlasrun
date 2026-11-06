@@ -97,13 +97,13 @@ const TAU=Math.PI*2, clamp=(n,a,b)=>Math.max(a,Math.min(b,n)), lerp=(a,b,t)=>a+(
 const themes={grass:'#527b53',grass2:'#486f49',road:'#444853',roadEdge:'#2e323a',roadLine:'#e8dec2',sidewalk:'#ccc2ae',sidewalkEdge:'#7f786c',parks:'#5c8a5e',water:'#2d6c82'};
 const roadWidths={motorway:22,motorway_link:11.5,trunk:18,trunk_link:11,primary:15,primary_link:10.5,secondary:13,secondary_link:10,tertiary:11,tertiary_link:9.5,residential:8.8,unclassified:8.8,living_street:6.8,track:6.4,service:5.8,pedestrian:6,road:8.2};
 const carPalette=['#e2e8f0','#cbd5e1','#334155','#b91c1c','#1d4ed8','#d97706','#0f766e','#f8fafc','#475569','#7c2d12','#15803d','#64748b'];
-const state={world:null,player:{x:0,y:0,angle:-Math.PI/2,speed:0,condition:100,odometer:0,score:0,onBridge:false,bridgeElev:0},cam:{x:0,y:0},keys:{},zoom:5.2,mode:'sun',dayPhase:0.37,traffic:[],people:[],skids:[],dust:[],rain:[],route:null,navGoal:null,mission:null,paused:false,loading:false,driveTime:0,trafficEnabled:true,last:0,raf:0,screenW:1,screenH:1,renderW:1,renderH:1,sound:false,audio:null,engine:null,manualSteer:0,downshift:false,cacheRaw:null,now:0,minimapExpanded:false,routeTimer:0,tipDismissed:false,viewMode:'pixel',wantedCesium:false};
+const state={world:null,player:{x:0,y:0,angle:-Math.PI/2,speed:0,condition:100,odometer:0,score:0,onBridge:false,bridgeElev:0},cam:{x:0,y:0},keys:{},zoom:6.8,mode:'sun',dayPhase:0.37,traffic:[],people:[],skids:[],dust:[],rain:[],route:null,navGoal:null,mission:null,paused:false,loading:false,driveTime:0,trafficEnabled:true,last:0,raf:0,screenW:1,screenH:1,renderW:1,renderH:1,sound:false,audio:null,engine:null,manualSteer:0,downshift:false,cacheRaw:null,now:0,minimapExpanded:false,routeTimer:0,tipDismissed:false,viewMode:'pixel',wantedCesium:false};
 let toastTimer,loadingController=null,weatherTick=0,lastSearch=0;
 function toast(message,duration=3100){const el=$('toast');el.textContent=message;el.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('visible'),duration)}
 function note(t){$('tipText').textContent=t;$('tipBar').classList.remove('hidden')}
 function setModal(el,show){$(el).classList.toggle('hidden',!show)}
-function persist(){try{localStorage.setItem('pixelruas-save-v2',JSON.stringify({condition:state.player.condition,score:state.player.score,km:state.player.odometer,zoom:state.zoom,weather:state.mode,sound:state.sound,wantedCesium:state.wantedCesium,aerialEnabled:aerial.enabled}))}catch(e){}}
-function loadSave(){try{const p=JSON.parse(localStorage.getItem('pixelruas-save-v2')||'{}');state.player.condition=p.condition??100;state.player.score=p.score??0;state.player.odometer=p.km??0;state.zoom=clamp(p.zoom??5.2,2.2,8.2);state.mode=['sun','rain','night'].includes(p.weather)?p.weather:'sun';state.wantedCesium=false;aerial.enabled=p.aerialEnabled!==false;updateAerialButton()}catch(e){}}
+function persist(){try{localStorage.setItem('pixelruas-save-v2',JSON.stringify({condition:state.player.condition,score:state.player.score,km:state.player.odometer,zoom:state.zoom,zoomPreferenceVersion:1,weather:state.mode,sound:state.sound,wantedCesium:state.wantedCesium,aerialEnabled:aerial.enabled}))}catch(e){}}
+function loadSave(){try{const p=JSON.parse(localStorage.getItem('pixelruas-save-v2')||'{}');state.player.condition=p.condition??100;state.player.score=p.score??0;state.player.odometer=p.km??0;state.zoom=clamp(p.zoomPreferenceVersion===1?(p.zoom??6.8):6.8,2.2,8.2);state.mode=['sun','rain','night'].includes(p.weather)?p.weather:'sun';state.wantedCesium=false;aerial.enabled=p.aerialEnabled!==false;updateAerialButton()}catch(e){}}
 function showMap(){setModal('pauseModal',false);setModal('mapModal',true);state.paused=true;setTimeout(()=>$('placeInput').focus(),100)}
 function hideMap(){if(!state.world){toast('Escolha uma cidade real para começar.');return}setModal('mapModal',false);state.paused=false}
 function pause(force){state.paused=typeof force==='boolean'?force:!state.paused;setModal('pauseModal',state.paused);$('pauseStats').textContent=`${(state.player.odometer/1000).toFixed(2)} km percorridos · ${state.player.score.toLocaleString('pt-BR')} pontos`}
@@ -147,8 +147,8 @@ function roadCorridorMargin(s,extra=BUILDING_EDGE_CLEARANCE){
  if(isHighwayType(type))return s.width*0.5+5.2+extra;
  return s.width*0.5+sidewalkHalfExtentForType(type,false,Boolean(s.road?.unpaved))+extra;
 }
-const makeGrid=(items,sz=70)=>{const grid=new Map;items.forEach((item,index)=>{const b=item.bbox||bboxOf(item.points),minX=Math.floor(b.minX/sz),maxX=Math.floor(b.maxX/sz),minY=Math.floor(b.minY/sz),maxY=Math.floor(b.maxY/sz);for(let x=minX;x<=maxX;x++)for(let y=minY;y<=maxY;y++){const k=x+','+y;if(!grid.has(k))grid.set(k,[]);grid.get(k).push(index)}});return {grid,sz,items}}
-function searchGrid(idx,box){if(!idx)return [];const {grid,sz,items}=idx,seen=new Set(),out=[];const x0=Math.floor(box.minX/sz),x1=Math.floor(box.maxX/sz),y0=Math.floor(box.minY/sz),y1=Math.floor(box.maxY/sz);for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++){for(const i of grid.get(x+','+y)||[]){if(seen.has(i))continue;seen.add(i);const it=items[i];if(intersects(it.bbox||bboxOf(it.points),box))out.push(it)}}return out}
+const makeGrid=(items,sz=70)=>{const grid=new Map;for(let index=0;index<items.length;index++){const item=items[index],b=item.bbox||(item.bbox=bboxOf(item.points)),minX=Math.floor(b.minX/sz),maxX=Math.floor(b.maxX/sz),minY=Math.floor(b.minY/sz),maxY=Math.floor(b.maxY/sz);for(let x=minX;x<=maxX;x++)for(let y=minY;y<=maxY;y++){const k=x+','+y;let cell=grid.get(k);if(!cell){cell=[];grid.set(k,cell)}cell.push(index)}}return {grid,sz,items,marks:new Int32Array(Math.max(64,items.length+64)),seq:1}};
+function searchGrid(idx,box){if(!idx)return [];const {grid,sz,items}=idx;if(items.length>idx.marks.length)idx.marks=new Int32Array(items.length*2+64);let seq=(idx.seq=(idx.seq+1)|0);if(seq===0){idx.marks.fill(0);seq=idx.seq=1}const marks=idx.marks,out=[];const x0=Math.floor(box.minX/sz),x1=Math.floor(box.maxX/sz),y0=Math.floor(box.minY/sz),y1=Math.floor(box.maxY/sz);for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++){const cell=grid.get(x+','+y);if(!cell)continue;for(let c=0;c<cell.length;c++){const i=cell[c];if(marks[i]===seq)continue;marks[i]=seq;const it=items[i];if(!it)continue;const bb=it.bbox||(it.bbox=bboxOf(it.points));if(bb.maxX>=box.minX&&bb.minX<=box.maxX&&bb.maxY>=box.minY&&bb.minY<=box.maxY)out.push(it)}}return out}
 function nearBox(x,y,r){return{minX:x-r,minY:y-r,maxX:x+r,maxY:y+r}}
 function segmentInteriorCross(a,b,c,d,eps=0.035){
  const ux=b.x-a.x,uy=b.y-a.y,vx=d.x-c.x,vy=d.y-c.y,den=ux*vy-uy*vx;
@@ -799,7 +799,8 @@ function prepareWorld(world){
   }
   cleanPks.push(p);
  }
- world.parks=cleanPks;
+ world.parks=cleanPks.filter(b=>b.points?.length>=3);
+ world._parkGrid=world.parks.length?makeGrid(world.parks,64):null;
  const accepted=[];
  const accCells=new Map(),accCellSz=36;
  const getNearAcc=bb=>{
@@ -820,6 +821,14 @@ function prepareWorld(world){
 
  world.hiddenRoadOverlap=0;world.clippedRoadOverlap=0;
  for(const b of world.buildings){
+  // Se já foi alinhado e validado em decorateWorld, evita reprocessar geometria pesada!
+  if(b._validated&&b.points?.length>=3&&b.bbox){
+   b.sortK=(b.bbox.maxY+b.bbox.minY)*0.5-(b.bbox.maxX+b.bbox.minX)*0.08;
+   if(!b.lotPoly){b.parcelChecked=false;b.parcel=null;}
+   b.accessChecked=false;b.access=null;
+   addAcc(b);
+   continue;
+  }
   if(!b.geoPoints)b.geoPoints=b.points.map(p=>({...p}));
   const original=b.geoPoints;if(original.length<3||polygonArea(original)<8)continue;
   const bb=bboxOf(original);
@@ -832,8 +841,9 @@ function prepareWorld(world){
 
   // Preserva igrejas nas praças e escolas/hospitais nos pátios institucionais, mas bloqueia casas geradas em áreas públicas!
   const isCivicOrLandmark=Boolean(!b.lotGenerated&&(b.landmark==='church'||b.landmark==='school'||b.landmark==='hospital'||b.landmark==='public_building'));
-  const inPublicSpace=(world.parks||[]).some(area=>{
-   if(!area.points?.length||!intersects(bb,area.bbox,3.0))return false;
+  const nearParks=world._parkGrid?searchGrid(world._parkGrid,{minX:bb.minX-4,minY:bb.minY-4,maxX:bb.maxX+4,maxY:bb.maxY+4}):[];
+  const inPublicSpace=nearParks.some(area=>{
+   if(!area.points?.length)return false;
    if(area.type==='pitch')return pointInPoly(cCenter,area.points)||polygonsOverlapOrClose(candidatePts,area.points,2.2);
    if(isCivicOrLandmark&&(area.type==='institutional'||(area.type==='square'&&b.landmark==='church')))return false;
    if(['square','park','institutional'].includes(area.type)){
@@ -860,21 +870,19 @@ function prepareWorld(world){
   }
   if(overlapsAccepted){world.hiddenRoadOverlap++;continue}
   if(world.real&&polygonArea(safe)<polygonArea(original)*.995)world.clippedRoadOverlap++;
-  b.points=safe;b.bbox=sbb;b.sortK=(sbb.maxY+sbb.minY)*0.5-(sbb.maxX+sbb.minX)*0.08;
-  const height=clamp(b.height||5,2,30),shift=clamp(height*.28,1.4,6.5);
-  const anchor=polygonCenter(safe);
-  b.safeShadow=world.real?keepFootprintOffRoad(shiftPolygon(safe,shift+1.4,shift+1.8),segments,anchor,0.2):shiftPolygon(safe,shift+1.4,shift+1.8);
-  b.safeOuterWall=world.real?keepFootprintOffRoad(shiftPolygon(safe,shift,shift*.72),segments,anchor,0.2):shiftPolygon(safe,shift,shift*.72);
-  b.safeInnerWall=world.real?keepFootprintOffRoad(shiftPolygon(safe,shift*.45,shift*.35),segments,anchor,0.2):shiftPolygon(safe,shift*.45,shift*.35);
+  b.points=safe;b.bbox=sbb;b.sortK=(sbb.maxY+sbb.minY)*0.5-(sbb.maxX+sbb.minX)*0.08;b._validated=true;
   b.accessChecked=false;b.access=null;
   if(!b.lotPoly){b.parcelChecked=false;b.parcel=null;}
   addAcc(b);
  }
  world.buildings=accepted;
- world.parks=world.parks.filter(b=>b.points.length>=3);
  world.buildingGrid=makeGrid(world.buildings);
+ for(const r of world.roads){if(!r.bbox)r.bbox=bboxOf(r.points);r._guardSpans=null;}
+ world.roadGrid=makeGrid(world.roads,120);
  filterAndIndexTrees(world);
  world.graph=makeGraph(world.roads);
+ world.crosswalkNodes=world.graph.filter(n=>n.edges.length>=3&&!n.edges.some(e=>isHighwayType(e.way.type)));
+ world.signalNodes=world.crosswalkNodes.filter(n=>n.edges.some(e=>e.way.type==='primary'||e.way.type==='secondary')&&!n.edges.some(e=>e.way.bridge));
  if(!world.segments.length&&!world.freeDrive)throw new Error('A região escolhida não contém ruas dirigíveis.');
 }
 
@@ -1000,13 +1008,14 @@ function parcelForRealBuilding(w,b){
  backV=Math.max(bMaxV+1.2,Math.min(backV,frontV+26));
 
  const fromUV=(u,v)=>({x:street.a.x+tx*u+nx*v,y:street.a.y+ty*u+ny*v});
- for(const park of w.parks||[]){
+ const localParks=w._parkGrid?searchGrid(w._parkGrid,{minX:bb.minX-34,minY:bb.minY-34,maxX:bb.maxX+34,maxY:bb.maxY+34}):(w.parks||[]);
+ for(const park of localParks){
   if(!park.points?.length)continue;
   if(['pitch','square','park','institutional'].includes(park.type)){
    const testPoly=makeOrientedLotQuad(fromUV,leftU,rightU,frontV,backV,side);
    if(intersects(bboxOf(testPoly),park.bbox,2.5)&&polygonsOverlapOrClose(testPoly,park.points,1.8)){
-    for(let step=0;step<10;step++){
-     backV-=1.8;
+    for(let step=0;step<8;step++){
+     backV-=2.2;
      if(backV<bMaxV+0.5)return null;
      const shPoly=makeOrientedLotQuad(fromUV,leftU,rightU,frontV,backV,side);
      if(!polygonsOverlapOrClose(shPoly,park.points,1.8))break;
@@ -1026,8 +1035,13 @@ function parcelForRealBuilding(w,b){
  const isComm=Boolean(b.landmark&&['food','market','clothes','garage','optician','pharmacy','shop','bank','fuel'].includes(b.landmark));
  return {points:poly,seed,frontRoad:street.road.name||'',streetSeg:street,estimated:true,bbox:bboxOf(poly),isCommercial:isComm};
 }
+let _parcelFrameBudget=10;
 function getRealParcel(w,b){
- if(!b.parcelChecked){b.parcelChecked=true;b.parcel=parcelForRealBuilding(w,b)}
+ if(b.parcelChecked)return b.parcel;
+ if(b.lotPoly&&b.lotPoly.length>=4){b.parcelChecked=true;b.parcel=parcelForRealBuilding(w,b);return b.parcel;}
+ if(_parcelFrameBudget<=0)return null;
+ _parcelFrameBudget--;
+ b.parcelChecked=true;b.parcel=parcelForRealBuilding(w,b);
  return b.parcel;
 }
 function segmentIntersection(a,b,c,d){
@@ -1065,169 +1079,189 @@ function extrudeSegment25D(ctx,a,b,h,baseColor,topColor=null){
  }
 }
 
-function drawMappedParcel(w,b){
- const lot=getRealParcel(w,b);if(!lot||state.zoom<2.0)return;
+// Renderizador de lotes sem ctx.clip() (elimina centenas de flushes de stencil da GPU por frame!) + LOD progressivo
+
+// Existing indices remain valid after append-only streaming; index just the new objects.
+function appendSpatialGrid(idx,items,from){
+ if(!idx||idx.items!==items||from>items.length)return makeGrid(items,idx?.sz||70);
+ const {grid,sz}=idx;
+ for(let i=from;i<items.length;i++){
+  const item=items[i],b=item.bbox||(item.bbox=bboxOf(item.points));
+  for(let x=Math.floor(b.minX/sz);x<=Math.floor(b.maxX/sz);x++)
+   for(let y=Math.floor(b.minY/sz);y<=Math.floor(b.maxY/sz);y++){
+    const k=x+','+y;let cell=grid.get(k);if(!cell){cell=[];grid.set(k,cell);}cell.push(i);
+   }
+ }
+ return idx;
+}
+// Reuse vector drawing commands: original coordinates, strokes and alpha, no raster scaling.
+// Only houses and parcels use this cache; signs and imagery-dependent buildings stay live.
+const vectorDrawCache={world:null,grid:null,zoom:0,mode:'',entries:new Map(),commands:0,budget:0,hits:0,misses:0};
+function beginVectorFrame(){
+ const c=vectorDrawCache,w=state.world;
+ if(c.world!==w||c.grid!==w?.buildingGrid||c.zoom!==state.zoom||c.mode!==state.mode){
+  c.entries.clear();c.commands=0;c.world=w;c.grid=w?.buildingGrid;c.zoom=state.zoom;c.mode=state.mode;
+ }
+ c.budget=2;
+}
+function drawVectorCached(owner,slot,revision,target,draw){
+ const c=vectorDrawCache;let slots=c.entries.get(owner),entry=slots?.[slot];
+ if(entry&&entry.points===owner.points&&entry.landmark===owner.landmark&&entry.revision===revision){
+  c.hits++;
+  // Refresh LRU position without retaining map data outside the active world.
+  c.entries.delete(owner);c.entries.set(owner,slots);
+  for(const op of entry.ops){if(op[0]===0)target[op[1]]=op[2];else target[op[1]](...op[2]);}
+  return;
+ }
+ c.misses++;
+ if(c.budget<=0||typeof Path2D==='undefined'){draw(target);return;}
+ const started=performance.now(),ops=[];
+ let path=new Path2D(),snapshot=null;
+ const pathMethods=new Set(['moveTo','lineTo','closePath','rect','arc','arcTo','ellipse','bezierCurveTo','quadraticCurveTo']);
+ // The first draw still goes straight to the canvas; recording adds no extra render pass.
+ const methods=new Map();
+ const recorder=new Proxy(target,{
+  get(t,key){
+   if(typeof t[key]!=='function')return t[key];
+   if(methods.has(key))return methods.get(key);
+   const fn=(...args)=>{
+    if(key==='beginPath'){path=new Path2D();snapshot=null;}
+    else if(pathMethods.has(key)){path[key](...args);snapshot=null;}
+    else if(key==='fill'||key==='stroke'){
+     if(!snapshot)snapshot=new Path2D(path);
+     ops.push([1,key,[snapshot,...args]]);
+    }else ops.push([1,key,args]);
+    return t[key](...args);
+   };
+   methods.set(key,fn);return fn;
+  },
+  set(t,key,value){ops.push([0,key,value]);t[key]=value;return true;}
+ });
+ draw(recorder);c.budget-=performance.now()-started;
+ if(!ops.length)return;
+ if(!slots){slots={};c.entries.set(owner,slots);}
+ if(entry)c.commands-=entry.ops.length;
+ slots[slot]={revision,points:owner.points,landmark:owner.landmark,ops};c.commands+=ops.length;
+ // Bound both native path count and JS command storage. Eviction never removes world objects.
+ while(c.commands>60000||c.entries.size>1200){
+  const key=c.entries.keys().next().value,old=c.entries.get(key);
+  for(const value of Object.values(old))c.commands-=value.ops.length;
+  c.entries.delete(key);
+ }
+}
+const roadDrawCache={world:null,roads:null,length:0,grid:null,order:null,padding:0};
+function visibleRoadCandidates(w){
+ const c=roadDrawCache;
+ if(c.world!==w||c.roads!==w.roads||c.length!==w.roads.length||c.grid!==w.roadGrid){
+  c.world=w;c.roads=w.roads;c.length=w.roads.length;
+  c.grid=w.roadGrid=makeGrid(w.roads,120);
+  c.order=new Map(w.roads.map((r,i)=>[r,i]));
+  c.padding=w.roads.reduce((n,r)=>Math.max(n,r.width||0),0)+36;c.view=null;
+ }
+ const v=state.view,p=c.padding;
+ if(c.view===v)return c.visible;c.view=v;
+ return c.visible=searchGrid(c.grid,{minX:v.minX-p,minY:v.minY-p,maxX:v.maxX+p,maxY:v.maxY+p})
+  .sort((a,b)=>c.order.get(a)-c.order.get(b));
+}
+
+function drawMappedParcel(w,b,context=ctx){
+ const lot=getRealParcel(w,b);if(!lot)return;
  const poly=lot.points,seed=lot.seed;
  if(poly.length<3)return;
- const p0=poly[0],p1=poly[1],p2=poly[2],p3=poly[poly.length>3?3:2];
+ const isComm=Boolean(lot.isCommercial||(b.landmark&&['food','market','clothes','garage','optician','pharmacy','shop','bank','fuel'].includes(b.landmark)));
+ const zoom=state.zoom;
+
+ // 1. Base do quintal / pátio (1 único fill, zero context.clip!)
+ pathPoly(context,poly);
+ if(isComm){
+  context.fillStyle=seed%2===0?'#b3ada1':'#bcb5a8';
+ }else{
+  const ys=seed%4;
+  context.fillStyle=ys===0?'#4d754c':ys===1?'#557d52':ys===2?'#476c47':'#5b8055';
+ }
+ context.fill();
+
+ // Em zoom afastado, apenas a base + contorno leve de divisa basta (ultra-rápido!)
+ if(zoom<2.75){
+  context.strokeStyle='#ded8caaa';context.lineWidth=0.55;context.stroke();
+  return;
+ }
+
+ const p0=poly[0],p1=poly[1],p3=poly[poly.length>3?3:2];
  const frontLen=hypot(p1.x-p0.x,p1.y-p0.y);
- const ux=(p1.x-p0.x)/Math.max(0.1,frontLen),uy=(p1.y-p0.y)/Math.max(0.1,frontLen);
  const depthLen=hypot(p3.x-p0.x,p3.y-p0.y);
+ const ux=(p1.x-p0.x)/Math.max(0.1,frontLen),uy=(p1.y-p0.y)/Math.max(0.1,frontLen);
  const nx=(p3.x-p0.x)/Math.max(0.1,depthLen),ny=(p3.y-p0.y)/Math.max(0.1,depthLen);
  const ptUV=(u,v)=>({x:p0.x+ux*u+nx*v,y:p0.y+uy*u+ny*v});
- const isComm=Boolean(lot.isCommercial||(b.landmark&&['food','market','clothes','garage','optician','pharmacy','shop','bank','fuel'].includes(b.landmark)));
 
- ctx.save();
- pathPoly(ctx,poly);
- ctx.clip();
+ if(!isComm&&poly.length===4&&frontLen>5&&depthLen>6){
+  const patioDepth=Math.min(depthLen*0.42,4.2+(seed%3)*0.85);
+  const floorTone=seed%3===0?'#b5afa2':seed%3===1?'#c2b6a2':'#a6a39a';
+  pathPoly(context,[p0,p1,ptUV(frontLen,patioDepth),ptUV(0,patioDepth)]);
+  context.fillStyle=floorTone;context.fill();
 
- if(isComm){
-  // Pátio comercial em piso intertravado/concreto polido
-  const floorTone=seed%2===0?'#b3ada1':'#bcb5a8';
-  ctx.fillStyle=floorTone;
-  ctx.fill();
-  if(state.zoom>2.3&&frontLen>5){
-   ctx.strokeStyle='#dfdad085';ctx.lineWidth=0.32;
-   const stalls=Math.min(5,Math.floor(frontLen/2.6));
-   for(let s=1;s<=stalls;s++){
-    const uS=(s/(stalls+1))*frontLen;
-    const pA=ptUV(uS,0.25),pB=ptUV(uS,Math.min(depthLen*0.45,4.6));
-    ctx.beginPath();ctx.moveTo(pA.x,pA.y);ctx.lineTo(pB.x,pB.y);ctx.stroke();
-   }
-  }
- }else{
-  // Quintal residencial gramado rico + calçada interna e rampa de garagem
-  const yardStyle=seed%4;
-  ctx.fillStyle=yardStyle===0?'#4d754c':yardStyle===1?'#557d52':yardStyle===2?'#476c47':'#5b8055';
-  ctx.fill();
+  const garageLeft=(seed%2)===0;
+  const gWidth=clamp(frontLen*0.38,2.5,3.4);
+  const gStartU=garageLeft?0.65:Math.max(0.7,frontLen-gWidth-0.65);
+  pathPoly(context,[ptUV(gStartU,0),ptUV(gStartU+gWidth,0),ptUV(gStartU+gWidth,patioDepth+1.3),ptUV(gStartU,patioDepth+1.3)]);
+  context.fillStyle=shade(floorTone,-18);context.fill();
 
-  if(state.zoom>2.2&&poly.length>=4&&frontLen>5&&depthLen>6){
-   const patioDepth=Math.min(depthLen*0.42,4.2+(seed%3)*0.85);
-   const patioPoly=[p0,p1,ptUV(frontLen,patioDepth),ptUV(0,patioDepth)];
-   pathPoly(ctx,patioPoly);
-   const floorTone=seed%3===0?'#b5afa2':seed%3===1?'#c2b6a2':'#a6a39a';
-   ctx.fillStyle=floorTone;
-   ctx.fill();
-
-   // Canteiro de jardim frontal ao lado da garagem
-   const garageLeft=(seed%2)===0;
-   const gWidth=clamp(frontLen*0.38,2.5,3.4);
-   const gStartU=garageLeft?0.65:Math.max(0.7,frontLen-gWidth-0.65);
-   const gardenU0=garageLeft?gStartU+gWidth+0.4:0.45;
-   const gardenW=Math.max(0,frontLen-gWidth-1.6);
-   if(gardenW>1.5){
-    const gardPoly=[ptUV(gardenU0,0.35),ptUV(gardenU0+gardenW,0.35),ptUV(gardenU0+gardenW,Math.min(2.1,patioDepth*0.55)),ptUV(gardenU0,Math.min(2.1,patioDepth*0.55))];
-    pathPoly(ctx,gardPoly);ctx.fillStyle='#3f6942';ctx.fill();
-    if(state.zoom>3.0){
-     ctx.fillStyle=seed%2===0?'#f6ad55':'#fc8181';
-     for(let fl=0.4;fl<gardenW-0.3;fl+=1.1){
-      const fp=ptUV(gardenU0+fl,1.0);ctx.fillRect(fp.x-0.25,fp.y-0.25,0.5,0.5);
-     }
-    }
-   }
-
-   // Rampa de veículos em ardósia / pedra miracema
-   const driveway=[ptUV(gStartU,0),ptUV(gStartU+gWidth,0),ptUV(gStartU+gWidth,patioDepth+1.3),ptUV(gStartU,patioDepth+1.3)];
-   pathPoly(ctx,driveway);
-   ctx.fillStyle=shade(floorTone,-18);
-   ctx.fill();
-   if(state.zoom>3.1){
-    ctx.strokeStyle=shade(floorTone,-32);ctx.lineWidth=0.22;
-    for(let rv=0.8;rv<patioDepth+1.0;rv+=1.1){
-     const ra=ptUV(gStartU+0.15,rv),rb=ptUV(gStartU+gWidth-0.15,rv);
-     ctx.beginPath();ctx.moveTo(ra.x,ra.y);ctx.lineTo(rb.x,rb.y);ctx.stroke();
-    }
-   }
-
-   // Piscina ou pomar nos fundos em lotes amplos
-   if(state.zoom>2.8&&depthLen>13.5&&seed%6===0&&frontLen>8.8){
-    const pw=Math.min(4.2,frontLen*0.44),pd=2.6;
-    const pu=(frontLen-pw)*0.5,pv=depthLen-pd-1.5;
-    const poolDeck=[ptUV(pu,pv),ptUV(pu+pw,pv),ptUV(pu+pw,pv+pd),ptUV(pu,pv+pd)];
-    pathPoly(ctx,poolDeck);ctx.fillStyle='#dfd9ca';ctx.fill();
-    const poolWater=[ptUV(pu+0.32,pv+0.32),ptUV(pu+pw-0.32,pv+0.32),ptUV(pu+pw-0.32,pv+pd-0.32),ptUV(pu+0.32,pv+pd-0.32)];
-    pathPoly(ctx,poolWater);ctx.fillStyle='#1e6f8c';ctx.fill();
-    const poolShallow=[ptUV(pu+0.5,pv+0.5),ptUV(pu+pw-0.32,pv+0.5),ptUV(pu+pw-0.32,pv+pd-0.32),ptUV(pu+0.5,pv+pd-0.32)];
-    pathPoly(ctx,poolShallow);ctx.fillStyle='#38a3c4';ctx.fill();
-   }
+  if(zoom>3.3&&depthLen>13.5&&seed%6===0&&frontLen>8.8){
+   const pw=Math.min(4.2,frontLen*0.44),pd=2.6,pu=(frontLen-pw)*0.5,pv=depthLen-pd-1.5;
+   pathPoly(context,[ptUV(pu,pv),ptUV(pu+pw,pv),ptUV(pu+pw,pv+pd),ptUV(pu,pv+pd)]);context.fillStyle='#dfd9ca';context.fill();
+   pathPoly(context,[ptUV(pu+0.32,pv+0.32),ptUV(pu+pw-0.32,pv+0.32),ptUV(pu+pw-0.32,pv+pd-0.32),ptUV(pu+0.32,pv+pd-0.32)]);context.fillStyle='#2986a8';context.fill();
   }
  }
- ctx.restore();
 
- if(state.zoom<2.25)return;
  const wallPalettes=['#ded8ca','#d6cab4','#ceb99e','#c5b49e','#cbd3ce','#dac9ba'];
  const wallColor=wallPalettes[seed%wallPalettes.length];
- const wallTop='#ebe5d8'; // pingadeira contínua padronizada para divisas perfeitas lado a lado
+ const wallTop='#ebe5d8';
  const wallH=isComm?1.25:1.95;
-
- ctx.save();
- // Sombra curta dos muros de divisa
- ctx.strokeStyle='#14241e58';
- ctx.lineWidth=1.1;
- ctx.beginPath();
- for(let i=isComm?1:0;i<poly.length;i++){
-  const a=poly[i],bPt=poly[(i+1)%poly.length];
-  ctx.moveTo(a.x+SHADOW_X*wallH*0.75,a.y+SHADOW_Y*wallH*0.75);
-  ctx.lineTo(bPt.x+SHADOW_X*wallH*0.75,bPt.y+SHADOW_Y*wallH*0.75);
- }
- ctx.stroke();
 
  // Muros laterais e de fundos (arestas 1..n-1)
  for(let i=1;i<poly.length;i++){
-  const a=poly[i],bPt=poly[(i+1)%poly.length];
-  extrudeSegment25D(ctx,a,bPt,wallH,shade(wallColor,-16),wallTop);
+  extrudeSegment25D(context,poly[i],poly[(i+1)%poly.length],wallH,shade(wallColor,-16),wallTop);
  }
-
  if(!isComm&&poly.length>=4){
-  // Muro frontal alinhado à calçada com portão basculante/gradeado e guia rebaixada!
   if(frontLen>5.0){
    const garageLeft=(seed%2)===0;
    const gateW=clamp(frontLen*0.38,2.5,3.4);
-   const g0=garageLeft?0.65:Math.max(0.65,frontLen-gateW-0.65);
-   const g1=g0+gateW;
+   const g0=garageLeft?0.65:Math.max(0.65,frontLen-gateW-0.65),g1=g0+gateW;
    const gp0=ptUV(g0,0),gp1=ptUV(g1,0);
-   // Guia rebaixada (rampa de entrada na calçada)
-   if(state.zoom>2.7){
-    const rOut0=ptUV(g0+0.15,-0.85),rOut1=ptUV(g1-0.15,-0.85);
-    pathPoly(ctx,[gp0,gp1,rOut1,rOut0]);
-    ctx.fillStyle='#b8b0a0';ctx.fill();
-   }
-   extrudeSegment25D(ctx,p0,gp0,wallH,wallColor,wallTop);
-   extrudeSegment25D(ctx,gp1,p1,wallH,wallColor,wallTop);
+   extrudeSegment25D(context,p0,gp0,wallH,wallColor,wallTop);
+   extrudeSegment25D(context,gp1,p1,wallH,wallColor,wallTop);
    const gateColors=['#2d3748','#4a3728','#1e293b','#52525b','#744210'];
-   const gateColor=gateColors[(seed>>2)%gateColors.length];
-   extrudeSegment25D(ctx,gp0,gp1,wallH*1.16,gateColor,'#e2e8f0');
-   // Pilaretes do portão + caixa de correio/interfone
-   if(state.zoom>3.1){
-    const pil0T={x:gp0.x+EXTRUDE_X*wallH*1.25,y:gp0.y+EXTRUDE_Y*wallH*1.25};
-    const pil1T={x:gp1.x+EXTRUDE_X*wallH*1.25,y:gp1.y+EXTRUDE_Y*wallH*1.25};
-    ctx.fillStyle=wallTop;
-    ctx.fillRect(pil0T.x-0.38,pil0T.y-0.38,0.76,0.76);
-    ctx.fillRect(pil1T.x-0.38,pil1T.y-0.38,0.76,0.76);
-   }
+   extrudeSegment25D(context,gp0,gp1,wallH*1.16,gateColors[(seed>>2)%5],'#e2e8f0');
   }else{
-   extrudeSegment25D(ctx,p0,p1,wallH,wallColor,wallTop);
+   extrudeSegment25D(context,p0,p1,wallH,wallColor,wallTop);
   }
  }
- ctx.restore();
 }
 
 function drawLotSurfaces(){
- const w=state.world;if(!w?.real||w.tileFallback||state.zoom<2.0)return;
- const visible=searchGrid(w.buildingGrid,{minX:state.view.minX-18,minY:state.view.minY-18,maxX:state.view.maxX+18,maxY:state.view.maxY+18});
- visible.sort((a,b)=>(a.bbox.maxY+a.bbox.minY)-(b.bbox.maxY+b.bbox.minY));
- for(const b of visible){const fade=streamFade(b,1.45);if(fade<=0)continue;ctx.save();ctx.globalAlpha*=fade;drawMappedParcel(w,b);ctx.restore()}
+ const w=state.world;if(!w?.real||w.tileFallback||state.zoom<2.3)return;
+ _parcelFrameBudget=10;
+ const visible=searchGrid(w.buildingGrid,{minX:state.view.minX-16,minY:state.view.minY-16,maxX:state.view.maxX+16,maxY:state.view.maxY+16});
+ visible.sort((a,b)=>(a.sortK||0)-(b.sortK||0));
+ const prevA=ctx.globalAlpha;
+ for(let i=0;i<visible.length;i++){
+  const b=visible[i];
+  const fade=streamFade(b,1.45);
+  if(fade<=0.04)continue;
+  if(fade<0.99){ctx.globalAlpha=prevA*fade;drawMappedParcel(w,b);ctx.globalAlpha=prevA;}
+  else {const lot=getRealParcel(w,b);if(lot)drawVectorCached(b,'parcel',lot,ctx,c=>drawMappedParcel(w,b,c));}
+ }
 }
 function drawPropertyAccesses(){
- const w=state.world;if(!w||w.tileFallback)return;
+ const w=state.world;if(!w||w.tileFallback||state.zoom<2.8)return;
  ensureAccessForVisible();
  const near=searchGrid(w.buildingGrid,{minX:state.view.minX-12,minY:state.view.minY-12,maxX:state.view.maxX+12,maxY:state.view.maxY+12});
  ctx.save();ctx.lineJoin='miter';ctx.lineCap='butt';
  for(const b of near){
-  ctx.globalAlpha=streamFade(b,1.45);
-  if(b.parcel)continue;
+  if(b.parcel||b.lotPoly)continue;
   const path=b.access?.points;if(!path||path.length<2)continue;
-  const p=path[0],q=path[path.length-1];
+  ctx.globalAlpha=streamFade(b,1.45);
+  const p=path[0];
   ctx.strokeStyle='#637067b0';ctx.lineWidth=2.3;ctx.beginPath();ctx.moveTo(p.x,p.y);for(let k=1;k<path.length;k++)ctx.lineTo(path[k].x,path[k].y);ctx.stroke();
   ctx.strokeStyle='#dfd2b7d9';ctx.lineWidth=1.45;ctx.stroke();
  }
@@ -1834,7 +1868,7 @@ function drawPOIs(){
   }
   const spec=PLACE_TYPES[p.kind],x=p.x,y=p.y;if(!spec)continue;
   // Se o local já tem um edifício 2.5D renderizado, não desenha o pino gigante por cima tapando o telhado/fachada
-  const hasB=Boolean(p.matchedBuilding||p.materialized||(w.buildings||[]).some(b=>b.landmark===p.kind&&hypot(x-polygonCenter(b.points).x,y-polygonCenter(b.points).y)<24));
+  const hasB=Boolean(p.matchedBuilding||p.materialized||searchGrid(w.buildingGrid,nearBox(x,y,24)).some(b=>b.landmark===p.kind&&hypot(x-polygonCenter(b.points).x,y-polygonCenter(b.points).y)<24));
   if(hasB)continue;
   ctx.fillStyle='#142b31e9';ctx.fillRect(x-3.5,y-7.7,7,6.2);ctx.fillStyle=spec.color;ctx.fillRect(x-3,y-7.2,6,5.2);ctx.fillStyle='#203b3c';ctx.fillRect(x-2.3,y-6.6,4.6,3.9);
   ctx.fillStyle=spec.color;ctx.font='bold 3px monospace';ctx.fillText(spec.short,x,y-4.6);ctx.fillStyle='#f7eed7';ctx.fillRect(x-.45,y-1.4,.9,2.4);
@@ -2399,7 +2433,7 @@ function insertStreamRegion(world,region){
  const roadKeys=makeStreamLookup(world.roads),addedRoads=[];
  for(const r of region.roads){const key=streamFeatureKey(r.points,'r');if(!key||roadKeys.has(key))continue;roadKeys.add(key);r._streamBorn=state.now;r._streamDelay=0;addedRoads.push(r)}
  if(!addedRoads.length)return 0;
- const existingGrid=world.buildingGrid,oldRoads=world.segmentGrid,accepted=[],occupied=new Map(),cellSize=36;
+ const existingGrid=world.buildingGrid,buildingCount=world.buildings.length,oldRoads=world.segmentGrid,accepted=[],occupied=new Map(),cellSize=36;
  const nearbyAccepted=bb=>{const out=new Set();for(let ix=Math.floor((bb.minX-4)/cellSize);ix<=Math.floor((bb.maxX+4)/cellSize);ix++)for(let iy=Math.floor((bb.minY-4)/cellSize);iy<=Math.floor((bb.maxY+4)/cellSize);iy++)for(const other of occupied.get(ix+','+iy)||[])out.add(other);return out};
  const register=b=>{const bb=b.bbox;for(let ix=Math.floor(bb.minX/cellSize);ix<=Math.floor(bb.maxX/cellSize);ix++)for(let iy=Math.floor(bb.minY/cellSize);iy<=Math.floor(bb.maxY/cellSize);iy++){const k=ix+','+iy;if(!occupied.has(k))occupied.set(k,[]);occupied.get(k).push(b)}};
  const sorted=[...region.buildings].sort((a,b)=>Number(!!a.estimated)-Number(!!b.estimated));
@@ -2432,7 +2466,7 @@ function insertStreamRegion(world,region){
  for(const p of region.pois||[]){const key=p.id?p.kind+'|'+p.id:p.kind+'|'+Math.round(p.x/8)+'|'+Math.round(p.y/8);if(!poiKeys.has(key)){world.pois.push(p);poiKeys.add(key)}}
  world.bounds={minX:Math.min(world.bounds.minX,region.bounds.minX),maxX:Math.max(world.bounds.maxX,region.bounds.maxX),minY:Math.min(world.bounds.minY,region.bounds.minY),maxY:Math.max(world.bounds.maxY,region.bounds.maxY)};
  prepareBridgesAndWaterways(world);
- world.buildingGrid=makeGrid(world.buildings);
+ world.buildingGrid=appendSpatialGrid(existingGrid,world.buildings,buildingCount);
  world.pierGrid=makeGrid((world.bridgePiers||[]).map(p=>({...p,bbox:nearBox(p.x,p.y,p.width+6)})),70);
  filterAndIndexTrees(world,{seedLandcover:false});
  runWhenIdle(()=>{if(state.world!==world)return;world.graph=makeGraph(world.roads);if(state.navGoal)state.route=computeRoute(state.player.x,state.player.y,state.navGoal);updateCityCounters()});
@@ -2496,7 +2530,8 @@ function mappedRoofColor(value){
  return palette[v]||null;
 }
 function colorRoof(i){return ['#c46243','#b3543a','#d17849','#8e8f8c','#9e6b4f','#a84d38','#787d7a','#c9885b'][i%8]}
-function shade(c,amount){let r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);return '#'+[r,g,b].map(v=>clamp(Math.round(v+amount),0,255).toString(16).padStart(2,'0')).join('')}
+const shadeCache=new Map();
+function shade(c,amount){const key=c+'|'+amount,cached=shadeCache.get(key);if(cached!==undefined)return cached;let r=parseInt(c.slice(1,3),16),g=parseInt(c.slice(3,5),16),b=parseInt(c.slice(5,7),16);const result='#'+[r,g,b].map(v=>clamp(Math.round(v+amount),0,255).toString(16).padStart(2,'0')).join('');if(shadeCache.size>=4096)shadeCache.clear();shadeCache.set(key,result);return result}
 // AERIAL REFERENCE (OpenAerialMap/HOTOSM; coverage varies). This is NOT a building detector.
 // O mosaico aberto é analisado apenas quando contém pixels RGB utilizáveis.
 // Candidatos não mapeados são destacados como inferidos, nunca como perímetros cadastrados.
@@ -3571,7 +3606,7 @@ function drawGuardrailSpan25D(pts,isRightSide){
 // ============================================================================
 function drawGroundRoads(){
  const w=state.world;
- const visible=w.roads.filter(r=>!r.bridge&&boxVisible(r.bbox||(r.bbox=bboxOf(r.points)),r.width+14));
+ const visible=visibleRoadCandidates(w).filter(r=>!r.bridge&&boxVisible(r.bbox||(r.bbox=bboxOf(r.points)),r.width+14));
  const dirt=visible.filter(r=>!isHighwayType(r.type)&&isDirtRoad(r));
  const urban=visible.filter(r=>!isHighwayType(r.type)&&!isDirtRoad(r));
  const hwys=visible.filter(r=>isHighwayType(r.type));
@@ -3859,7 +3894,7 @@ function drawGroundRoads(){
 // ============================================================================
 function drawBridges25D(){
  const w=state.world;if(!w?.roads)return;
- const bridges=w.roads.filter(r=>r.bridge&&boxVisible(r.bbox||(r.bbox=bboxOf(r.points)),r.width+22));
+ const bridges=visibleRoadCandidates(w).filter(r=>r.bridge&&boxVisible(r.bbox||(r.bbox=bboxOf(r.points)),r.width+22));
  if(!bridges.length)return;
  const isWet=state.mode==='rain',isNight=state.mode==='night';
 
@@ -4052,7 +4087,7 @@ function drawHighwayGantries(){
  if(state.zoom<2.25)return;
  const w=state.world;if(!w?.roads)return;
  let drawn=0;
- for(const r of w.roads){
+ for(const r of visibleRoadCandidates(w)){
   if(drawn>20)break;
   if(r.type!=='motorway'&&r.type!=='trunk')continue;
   if(!boxVisible(r.bbox||(r.bbox=bboxOf(r.points)),24)||r.points.length<2)continue;
@@ -5244,7 +5279,7 @@ function renderSingleBuilding(w,b){
   // NUNCA descarta a casa caso o lote esteja em esquina apertada (corrige casas invisíveis!)
   getRealParcel(w,b);
   const roofBase=mappedRoofColor(b.roofColor)||colorRoof(b.color);
-  drawBrazilianHouseRoof(ctx,pts,roofBase,seed,height);
+  drawVectorCached(b,'house',[b.id,b.height,b.roofColor,b.color].join('|'),ctx,c=>drawBrazilianHouseRoof(c,pts,roofBase,seed,height));
   ctx.restore();return;
  }
 
@@ -5290,7 +5325,7 @@ function drawBuildingsAndTrees(){
  }
 }
 
-function drawDetails(){const w=state.world;if(state.zoom<3.4)return;ctx.save();ctx.font='bold 2.35px monospace';ctx.textAlign='center';ctx.fillStyle='#e2e8f0a8';for(const r of w.roads){if(!r.name||r.bridge||!boxVisible(r.bbox||bboxOf(r.points),8)||hash(r.points[0].x,r.points[0].y,7)<.25)continue;const idx=Math.floor((r.points.length-1)*.5),a=r.points[idx],b=r.points[idx+1];if(!a||!b||hypot(b.x-a.x,b.y-a.y)<35)continue;const angle=Math.atan2(b.y-a.y,b.x-a.x);ctx.save();ctx.translate((a.x+b.x)/2,(a.y+b.y)/2);ctx.rotate(angle>Math.PI/2||angle< -Math.PI/2?angle+Math.PI:angle);ctx.fillText(r.name.toUpperCase().slice(0,29),0,-r.width*.22);ctx.restore()}ctx.restore()}
+function drawDetails(){const w=state.world;if(state.zoom<3.4)return;ctx.save();ctx.font='bold 2.35px monospace';ctx.textAlign='center';ctx.fillStyle='#e2e8f0a8';for(const r of visibleRoadCandidates(w)){if(!r.name||r.bridge||!boxVisible(r.bbox||bboxOf(r.points),8)||hash(r.points[0].x,r.points[0].y,7)<.25)continue;const idx=Math.floor((r.points.length-1)*.5),a=r.points[idx],b=r.points[idx+1];if(!a||!b||hypot(b.x-a.x,b.y-a.y)<35)continue;const angle=Math.atan2(b.y-a.y,b.x-a.x);ctx.save();ctx.translate((a.x+b.x)/2,(a.y+b.y)/2);ctx.rotate(angle>Math.PI/2||angle< -Math.PI/2?angle+Math.PI:angle);ctx.fillText(r.name.toUpperCase().slice(0,29),0,-r.width*.22);ctx.restore()}ctx.restore()}
 
 function drawStreetFurniture(){
  if(state.zoom<2.45)return;
@@ -5753,7 +5788,7 @@ function drawStreetNames(bridgesOnly=false){
  if(!state.world?.real||state.world.tileFallback||state.zoom<4.6)return;
  const w=state.world;let printed=0;const recorded=new Set();
  ctx.save();ctx.font='bold 2.65px monospace';ctx.textBaseline='middle';ctx.textAlign='center';ctx.lineJoin='round';
- for(const road of w.roads){
+ for(const road of visibleRoadCandidates(w)){
   if(Boolean(road.bridge)!==bridgesOnly)continue;
   if(printed>85)break;if(!road.name||recorded.has(road.name))continue;
   if(!boxVisible(road.bbox||bboxOf(road.points),10))continue;
@@ -5773,6 +5808,7 @@ function drawTileHint(){if(!state.world?.tileFallback)return;ctx.fillStyle='#182
 function drawWorld(){
  const w=state.world;if(!w)return;
  const W=state.renderW,H=state.renderH,z=state.zoom;
+ beginVectorFrame();
  state.view={minX:state.cam.x-W/(2*z)-28,maxX:state.cam.x+W/(2*z)+28,minY:state.cam.y-H/(2*z)-28,maxY:state.cam.y+H/(2*z)+28};
  ctx.save();ctx.translate(W*.5,H*.5);ctx.scale(z,z);ctx.translate(-state.cam.x,-state.cam.y);
  if(w.tileFallback){
@@ -5998,7 +6034,7 @@ function updateHUD(){
  if(state.sound&&state.engine){const f=clamp(Math.abs(p.speed)/36,0,1);state.engine.osc.frequency.setTargetAtTime(60+f*155,state.audio.currentTime,.08);state.engine.gain.gain.setTargetAtTime(.02+.065*f,state.audio.currentTime,.15)}
 }
 function resize(){const rect=canvas.getBoundingClientRect();state.renderW=Math.max(320,Math.floor(rect.width));state.renderH=Math.max(200,Math.floor(rect.height));canvas.width=state.renderW;canvas.height=state.renderH;state.screenW=rect.width;state.screenH=rect.height;ctx.imageSmoothingEnabled=false}
-function renderFrame(timestamp){const delta=state.last?clamp((timestamp-state.last)/1000,0,.055):0;state.last=timestamp;state.now+=delta;if(!state.paused&&!state.loading){state.driveTime+=delta;updatePlayer(delta);updateTraffic(delta);updatePeople(delta)}if(!state.loading)stepSatelliteVegetation();drawWorld();if(state.viewMode==='cesium')updateCesiumPosition();else if(state.world?.tileFallback)updateOpenFreePosition();if(state.now%0.1<delta){renderMini();updateHUD()}state.raf=requestAnimationFrame(renderFrame)}
+function renderFrame(timestamp){const delta=state.last?clamp((timestamp-state.last)/1000,0,.055):0;state.last=timestamp;state.now+=delta;if(!state.paused&&!state.loading){state.driveTime+=delta;updatePlayer(delta);updateTraffic(delta);updatePeople(delta)}if(!state.loading)stepSatelliteVegetation();if(state.viewMode!=='cesium')drawWorld();if(state.viewMode==='cesium')updateCesiumPosition();else if(state.world?.tileFallback)updateOpenFreePosition();if(state.now%0.1<delta){renderMini();updateHUD()}state.raf=requestAnimationFrame(renderFrame)}
 function setupAudio(){if(state.sound){if(!state.audio){const AC=window.AudioContext||window.webkitAudioContext;if(!AC){toast('Áudio indisponível neste navegador');state.sound=false;return}const audio=new AC,osc=audio.createOscillator(),gain=audio.createGain();osc.type='sawtooth';osc.frequency.value=60;gain.gain.value=0.01;osc.connect(gain);gain.connect(audio.destination);osc.start();state.audio=audio;state.engine={osc,gain}}state.audio.resume();$('audioButton').textContent='♪';$('audioButton').style.color='#e4d991'}else{if(state.audio)state.audio.suspend();$('audioButton').textContent='♫';$('audioButton').style.color=''}}
 function rotateWeather(){const a=['sun','rain','night'];state.mode=a[(a.indexOf(state.mode)+1)%a.length];$('weatherButton').textContent={sun:'☀',rain:'☂',night:'☾'}[state.mode];toast({sun:'Tempo ensolarado',rain:'Chuva ativada',night:'Exploração noturna'}[state.mode]);persist()}
 function resetCar(){spawnPlayer(state.world);state.player.condition=100;state.player.speed=0;pause(false);toast('Carro recuperado e pronto!')}
@@ -6047,24 +6083,24 @@ function loadCesiumJs(){
  }).catch(e=>{cesiumData.ready=null;throw e});
  return cesiumData.ready;
 }
-function stopCesium(){cesiumData.serial++;state.viewMode='pixel';if(state.world?.tileFallback&&openFree.map)$('openFreeMapContainer').classList.remove('hidden');$('cesiumContainer').classList.add('hidden');canvas.classList.remove('cesiumHidden');if(state.world?.real)$('mapKind').textContent=state.world.freeDrive?'EXPLORAÇÃO LIVRE · SEM RUAS':'MAPA REAL · OPENSTREETMAP';$('cesiumButton').classList.remove('active');$('cesiumButton').querySelector('.buttonLabel').textContent='CESIUM 3D';$('cesiumButton').firstChild.textContent='◈ ';cesiumStatus('');$('sourceAttribution').textContent=state.world?.real?'OpenFreeMap © OpenMapTiles · Dados © OpenStreetMap contributors (ODbL) | PixelRuas':'Selecione uma cidade real · PixelRuas'}
+function stopCesium(){cesiumData.serial++;if(cesiumData.viewer)cesiumData.viewer.useDefaultRenderLoop=false;state.viewMode='pixel';if(state.world?.tileFallback&&openFree.map)$('openFreeMapContainer').classList.remove('hidden');$('cesiumContainer').classList.add('hidden');canvas.classList.remove('cesiumHidden');if(state.world?.real)$('mapKind').textContent=state.world.freeDrive?'EXPLORAÇÃO LIVRE · SEM RUAS':'MAPA REAL · OPENSTREETMAP';$('cesiumButton').classList.remove('active');$('cesiumButton').querySelector('.buttonLabel').textContent='CESIUM 3D';$('cesiumButton').firstChild.textContent='◈ ';cesiumStatus('');$('sourceAttribution').textContent=state.world?.real?'OpenFreeMap © OpenMapTiles · Dados © OpenStreetMap contributors (ODbL) | PixelRuas':'Selecione uma cidade real · PixelRuas'}
 async function toggleCesium(){if(state.loading)return;if(state.viewMode==='cesium'){state.wantedCesium=false;stopCesium();persist();return}state.wantedCesium=true;persist();if(!state.world?.real){showMap();toast('Escolha uma cidade real para ativar o Cesium 3D',5000);return}try{await activateCesium()}catch(e){stopCesium();toast('Cesium 3D indisponível; o mapa pixel continua funcionando. Detalhe: '+e.message,8500);if(state.world?.freeDrive)showMap()}}
 async function updateSurfaceHeight(C,lat,lon,serial){try{const pos=C.Cartographic.fromDegrees(lon,lat);const [result]=await C.sampleTerrainMostDetailed(cesiumData.viewer.terrainProvider,[pos]);if(serial===cesiumData.serial&&Number.isFinite(result?.height)){cesiumData.surfaceHeight=result.height;cesiumData.surfaceReady=true;updateCesiumPosition(true)}}catch(e){console.warn('Cesium: altitude de terreno indisponível',e)}}
 async function activateCesium(){const w=state.world;if(!w?.real)return;const serial=++cesiumData.serial;cesiumStatus('CARREGANDO CESIUM 3D · terreno e prédios reais');const C=await loadCesiumJs();if(serial!==cesiumData.serial||state.world!==w)return;C.Ion.defaultAccessToken=CESIUM_ION_TOKEN;
  if(!cesiumData.viewer){
   $('cesiumContainer').classList.remove('hidden'); // WebGL deve iniciar em um elemento com dimensões reais.
   // Camada base Cesium ion; fallback automático de terreno e imagem se o recurso não estiver autorizado.
-  const viewer=new C.Viewer('cesiumContainer',{animation:false,timeline:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,shouldAnimate:false,terrain:C.Terrain.fromWorldTerrain(),requestRenderMode:false});
+  const viewer=new C.Viewer('cesiumContainer',{animation:false,timeline:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,shouldAnimate:false,terrain:C.Terrain.fromWorldTerrain(),requestRenderMode:true,maximumRenderTimeChange:Infinity});
   cesiumData.viewer=viewer;viewer.resolutionScale=.74;viewer.scene.screenSpaceCameraController.enableInputs=false;viewer.scene.screenSpaceCameraController.enableCollisionDetection=false;viewer.scene.globe.depthTestAgainstTerrain=false;viewer.scene.fog.enabled=false;viewer.scene.skyAtmosphere.show=false;viewer.scene.backgroundColor=C.Color.fromCssColorString('#132a32');viewer.scene.postProcessStages.fxaa.enabled=false;
   cesiumData.car=viewer.entities.add({name:'Seu carro',position:new C.CallbackProperty(()=>{const p=toGeographic();return C.Cartesian3.fromDegrees(p.lon,p.lat,2.8)},false),billboard:{image:pixelCarSvg(),width:34,height:54,rotation:new C.CallbackProperty(()=>-(state.player.angle+Math.PI/2),false),heightReference:C.HeightReference.RELATIVE_TO_GROUND,disableDepthTestDistance:Number.POSITIVE_INFINITY,verticalOrigin:C.VerticalOrigin.CENTER}});
   // Não bloquear a entrada no jogo aguardando a rede/tiles 3D.
   C.createOsmBuildingsAsync({maximumScreenSpaceError:24}).then(osm=>{viewer.scene.primitives.add(osm);cesiumData.buildings=osm;viewer.scene.requestRender()}).catch(e=>{console.warn('Cesium OSM Buildings sem autorização ou rede',e);toast('Cesium abriu sem edifícios 3D: confira permissões Cesium ion.',6000)});
  }
  if(serial!==cesiumData.serial||state.world!==w)return;
- cesiumData.surfaceHeight=0;cesiumData.surfaceReady=false;cesiumData.worldKey=w;state.viewMode='cesium';$('openFreeMapContainer').classList.add('hidden');$('cesiumContainer').classList.remove('hidden');canvas.classList.add('cesiumHidden');$('cesiumButton').classList.add('active');$('cesiumButton').querySelector('.buttonLabel').textContent='PIXEL ART';$('cesiumButton').firstChild.textContent='▦ ';$('mapKind').textContent=w.freeDrive?'EXPLORAÇÃO CESIUM · SEM DADOS DE RUAS':'CESIUM ION · OSM REAL';$('sourceAttribution').textContent='Cesium ion · © OpenStreetMap · veja também créditos do mapa';cesiumData.viewer.resize();cesiumData.viewer.scene.requestRender();updateCesiumPosition(true);cesiumStatus(w.freeDrive?'MODO LIVRE: ruas e colisões indisponíveis':'CESIUM 3D · direção ativa');setTimeout(()=>{if(state.viewMode==='cesium'&&!w.freeDrive)cesiumStatus('')},5000);
+ cesiumData.surfaceHeight=0;cesiumData.surfaceReady=false;cesiumData.worldKey=w;cesiumData.lastPosition=null;cesiumData.viewer.useDefaultRenderLoop=true;state.viewMode='cesium';$('openFreeMapContainer').classList.add('hidden');$('cesiumContainer').classList.remove('hidden');canvas.classList.add('cesiumHidden');$('cesiumButton').classList.add('active');$('cesiumButton').querySelector('.buttonLabel').textContent='PIXEL ART';$('cesiumButton').firstChild.textContent='▦ ';$('mapKind').textContent=w.freeDrive?'EXPLORAÇÃO CESIUM · SEM DADOS DE RUAS':'CESIUM ION · OSM REAL';$('sourceAttribution').textContent='Cesium ion · © OpenStreetMap · veja também créditos do mapa';cesiumData.viewer.resize();cesiumData.viewer.scene.requestRender();updateCesiumPosition(true);cesiumStatus(w.freeDrive?'MODO LIVRE: ruas e colisões indisponíveis':'CESIUM 3D · direção ativa');setTimeout(()=>{if(state.viewMode==='cesium'&&!w.freeDrive)cesiumStatus('')},5000);
  updateSurfaceHeight(C,w.lat,w.lon,serial);
 }
-function updateCesiumPosition(force=false){const d=cesiumData,v=d.viewer,w=state.world;if(!v||!w?.real||state.viewMode!=='cesium')return;if(!force&&state.now-d.lastDraw<.055)return;d.lastDraw=state.now;const C=window.Cesium,geo=toGeographic();const air=clamp(360-(state.zoom-3.9)*65,170,550);const height=d.surfaceReady?d.surfaceHeight+air:1800;v.camera.setView({destination:C.Cartesian3.fromDegrees(geo.lon,geo.lat,height),orientation:{heading:0,pitch:-Math.PI/2,roll:0}});v.scene.requestRender()}
+function updateCesiumPosition(force=false){const d=cesiumData,v=d.viewer,w=state.world;if(!v||!w?.real||state.viewMode!=='cesium')return;if(!force&&state.now-d.lastDraw<.055)return;d.lastDraw=state.now;const C=window.Cesium,geo=toGeographic();const air=clamp(360-(state.zoom-3.9)*65,170,550);const height=d.surfaceReady?d.surfaceHeight+air:1800;const signature=[state.player.x,state.player.y,state.player.angle,state.zoom,height].join('|');if(!force&&d.lastPosition===signature)return;d.lastPosition=signature;v.camera.setView({destination:C.Cartesian3.fromDegrees(geo.lon,geo.lat,height),orientation:{heading:0,pitch:-Math.PI/2,roll:0}});v.scene.requestRender()}
 
 function bindEvents(){window.addEventListener('resize',()=>{resize();if(cesiumData.viewer)cesiumData.viewer.resize()});$('aerialButton').addEventListener('click',toggleAerial);$('cesiumButton').addEventListener('click',toggleCesium);$('cesiumTestButton').addEventListener('click',testCesiumConnection);window.addEventListener('blur',()=>{state.keys={};document.querySelectorAll('.controlBtn').forEach(e=>e.classList.remove('pressed'))});window.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();state.keys[k]=true;if(e.repeat)return;if(k==='escape'){if(state.loading){loadingController?.abort();return}if(!$('poiModal').classList.contains('hidden')){setModal('poiModal',false);state.paused=false}else if(!$('mapModal').classList.contains('hidden'))hideMap();else pause();return}if(k==='p'){pause();return}if(k==='m'){showMap();return}if(k==='l'){showPOIs();return}if(k==='h'){toast('Faróis ligados à noite automaticamente');return}if(k==='r'){resetCar();return}if(k==='+'||k==='='){state.zoom=clamp(state.zoom+.3,2.0,7.4);persist()}if(k==='-'||k==='_'){state.zoom=clamp(state.zoom-.3,2.0,7.4);persist()}});window.addEventListener('keyup',e=>{state.keys[e.key.toLowerCase()]=false});$('expandArea').addEventListener('click',expandRealArea);$('missionButton').addEventListener('click',startMission);$('placesButton').addEventListener('click',showPOIs);$('closePois').addEventListener('click',()=>{setModal('poiModal',false);state.paused=false});$('poiModal').addEventListener('pointerdown',e=>{if(e.target===$('poiModal')){setModal('poiModal',false);state.paused=false}});$('mapButton').addEventListener('click',showMap);$('closeMap').addEventListener('click',hideMap);$('mapModal').addEventListener('pointerdown',e=>{if(e.target===$('mapModal'))hideMap()});$('pauseButton').addEventListener('click',()=>pause());$('resumeButton').addEventListener('click',()=>pause(false));$('restartButton').addEventListener('click',resetCar);$('pauseMapButton').addEventListener('click',showMap);$('weatherButton').addEventListener('click',rotateWeather);$('audioButton').addEventListener('click',()=>{state.sound=!state.sound;setupAudio();persist()});$('clearRoute').addEventListener('click',clearDestination);$('tipDismiss').addEventListener('click',()=>{$('tipBar').classList.add('hidden');state.tipDismissed=true});$('searchButton').addEventListener('click',searchPlace);$('placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')searchPlace()});document.querySelectorAll('.preset').forEach(el=>el.addEventListener('click',()=>loadReal(+el.dataset.lat,+el.dataset.lon,el.dataset.name)));$('coordButton').addEventListener('click',()=>{const c=parseCoord($('coordInput').value);if(!c){toast('Cole as coordenadas ou um link do Maps com @latitude,longitude');return}loadReal(c.lat,c.lon,'Coordenadas '+c.lat.toFixed(4)+', '+c.lon.toFixed(4))});$('downloadMap').addEventListener('click',saveMapFile);$('importFile').addEventListener('change',e=>{importMapFile(e.target.files?.[0]);e.target.value=''});$('cancelLoading').addEventListener('click',()=>{loadingController?.abort();setLoading(false);state.paused=!state.world;toast('Carregamento cancelado')});mini.addEventListener('click',e=>{if(state.loading)return;const r=mini.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*mini.width,y=(e.clientY-r.top)/r.height*mini.height;const wx=state.player.x+(x-mini.width/2)/state.miniZoom,wy=state.player.y+(y-mini.height/2)/state.miniZoom;setDestination(wx,wy)});$('expandMini').addEventListener('click',()=>{state.minimapExpanded=!state.minimapExpanded;$('expandMini').textContent=state.minimapExpanded?'⤡':'⤢';$('minimap').style.width=state.minimapExpanded?'300px':'';$('minimap').style.height=state.minimapExpanded?'235px':'';mini.width=state.minimapExpanded?300:232;mini.height=state.minimapExpanded?235:178;document.querySelector('.minimapPanel').style.width=state.minimapExpanded?'302px':''});canvas.addEventListener('pointerdown',e=>{if(e.shiftKey){const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*state.renderW/r.width,y=(e.clientY-r.top)*state.renderH/r.height;const wx=state.cam.x+(x-state.renderW/2)/state.zoom,wy=state.cam.y+(y-state.renderH/2)/state.zoom;setDestination(wx,wy)}});canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom+(e.deltaY>0?-.18:.18),2.0,7.4)},{passive:false});for(const [id,key] of [['touchLeft','touchleft'],['touchRight','touchright'],['touchGas','touchgas'],['touchBrake','touchbrake']])bindHold(id,key);document.addEventListener('visibilitychange',()=>{if(document.hidden){state.last=0;state.keys={};persist()}});setInterval(persist,30000)}
 function init(){loadSave();bindEvents();state.zoom=clamp(state.zoom,2.0,7.4);state.world=null;state.paused=true;showMap();$('weatherButton').textContent={sun:'☀',rain:'☂',night:'☾'}[state.mode];resize();state.last=0;state.raf=requestAnimationFrame(renderFrame);if(window.innerWidth<850)note('Use os botões para dirigir! Toque no minimapa para marcar um destino.');console.info('PixelRuas 2.5: estradas de terra com poeira 2.5D, árvores 2.5D via satélite em sprite atlas ultra-leve sem sobreposição e banner dinâmico de chegada em cidades.')}init();
