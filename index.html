@@ -122,14 +122,47 @@
 .bankAmtMinus{color:#fda4af;font-weight:900;white-space:nowrap}
 .phoneDock{display:flex;gap:8px;padding-top:2px}
 .phoneDock button{flex:1;padding:6px;border-radius:10px;border:1px solid #d89c4a55;background:#2b1c13;color:#f5e1bf;font-size:10px;font-weight:800}
-.shopTabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:2px}
-.shopTabBtn{flex:1;white-space:nowrap;padding:5px 6px;border-radius:7px;border:1px solid #ffffff26;background:#162d30;color:#c9ded6;font-size:9px;font-weight:800}
+.shopTabs{display:flex;flex-wrap:wrap;gap:4px;padding-bottom:2px}
+.shopTabBtn{flex:1 1 auto;white-space:nowrap;padding:4px 6px;border-radius:7px;border:1px solid #ffffff26;background:#162d30;color:#c9ded6;font-size:8.8px;font-weight:800}
 .shopTabBtn.active{background:#29553e;border-color:#98e274;color:#fef08a}
-.carGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:310px;overflow-y:auto;padding-right:2px}
+.carGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:292px;overflow-y:auto;padding-right:2px}
 .carCard{background:#122528;border:1px solid #ffffff1c;border-radius:10px;padding:7px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
 .carCard.equipped{border-color:#98e274;background:#1a3827}
 .carCard.owned:not(.equipped){border-color:#d89c4a77}
 .carCardSprite{width:40px;height:56px;background-image:url('assets/cars_atlas.png');background-size:480px 280px;background-repeat:no-repeat;image-rendering:pixelated;filter:drop-shadow(0 3px 3px #000a)}
+.carCardSprite.isMoto{background-image:url('assets/motos_atlas.png');background-size:480px 224px}
+.carCardSprite.isTruck{width:44px;height:58px;background-image:none;display:flex;align-items:center;justify-content:center}
+.carCardSprite.isTruck canvas{image-rendering:pixelated;display:block}
+.carCardTag{font-size:7.5px;font-weight:900;padding:1px 5px;border-radius:999px;background:#ffffff18;color:#fde68a;letter-spacing:.4px}
+.carCardTag.moto{background:#ea1d2c33;color:#fca5a5;border:1px solid #ea1d2c66}
+.carCardTag.truck{background:#b4530938;color:#fde68a;border:1px solid #f59e0b66}
+.ifuudAlert{background:#3b1216;border:1px solid #ea1d2c88;border-radius:10px;padding:8px 10px;font-size:10px;color:#fecdd3;display:flex;flex-direction:column;gap:6px;line-height:1.35}
+.ifuudAlert.ready{background:#153423;border-color:#4ade8077;color:#dcfce7}
+.ifuudAlert.warn{background:#3f2a0d;border-color:#f59e0b88;color:#fde68a}
+.ifuudQuickRow{display:flex;gap:6px}
+.ifuudQuickRow button{flex:1;padding:6px 5px;border:0;border-radius:7px;font-size:9.5px;font-weight:900;background:#ea1d2c;color:#fff}
+.ifuudQuickRow button.alt{background:#2563eb;color:#eff6ff}
+.ifuudQuickRow button.amber{background:#d97706;color:#1a0f08}
+.ifuudOrderList{display:flex;flex-direction:column;gap:7px;max-height:245px;overflow-y:auto;padding-right:2px}
+.ifuudOrderCard{background:#122528;border:1px solid #ea1d2c55;border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:4px}
+.ifuudOrderCard.freightCard{border-color:#f59e0b55}
+.ifuudOrderTop{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;font-weight:900;color:#fff7e4}
+.ifuudOrderPay{color:#86efac;font-size:11px;font-weight:900;white-space:nowrap}
+.ifuudOrderMeta{font-size:9px;color:#b8d4cc;line-height:1.3}
+.ifuudAcceptBtn{margin-top:2px;width:100%;padding:6px;border:0;border-radius:7px;font-size:10px;font-weight:900;background:linear-gradient(180deg,#f43f5e,#be123c);color:#fff}
+.ifuudAcceptBtn.amber{background:linear-gradient(180deg,#fbbf24,#d97706);color:#1f1106}
+.ifuudAcceptBtn:disabled{background:#2d241d;color:#a89a84;cursor:not-allowed}
+.freightDestRow{display:flex;gap:5px}
+.freightDestRow input{flex:1;min-width:0;padding:6px 8px;border-radius:8px;border:1px solid #f59e0b66;background:#0a191c;color:#fff7e4;font-size:10px;font-weight:700}
+.freightDestRow button{padding:6px 9px;border:0;border-radius:8px;background:linear-gradient(180deg,#fbbf24,#d97706);color:#1c1005;font-size:9.5px;font-weight:900;white-space:nowrap}
+.freightSugList{display:flex;flex-direction:column;gap:4px;max-height:92px;overflow-y:auto}
+.freightSugBtn{text-align:left;padding:5px 7px;border-radius:7px;border:1px solid #ffffff1a;background:#0f2226;color:#d6ebe2;font-size:9px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.freightSugBtn b{color:#fde68a;font-size:9px;white-space:nowrap}
+.freightQuoteBox{background:linear-gradient(135deg,#1d2e1b,#102325);border:1px solid #f59e0b88;border-radius:10px;padding:8px 9px;display:flex;flex-direction:column;gap:4px}
+.freightQuoteGrid{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:9px;color:#cbd5e1}
+.freightQuoteGrid span b{color:#fef08a;display:block;font-size:10.5px}
+.ifuudAcceptBtn{margin-top:2px;width:100%;padding:6px;border:0;border-radius:7px;font-size:10px;font-weight:900;background:linear-gradient(180deg,#f43f5e,#be123c);color:#fff}
+.ifuudAcceptBtn:disabled{background:#2d241d;color:#a89a84;cursor:not-allowed}
 .carCardName{font-size:9.5px;font-weight:800;color:#fff7e4;line-height:1.15;min-height:22px;display:flex;align-items:center;justify-content:center}
 .carCardStat{width:100%;font-size:8px;color:#9dc0b6;display:flex;justify-content:space-between;padding:0 2px}
 .carActionBtn{width:100%;padding:5px 4px;border:0;border-radius:7px;font-size:9.5px;font-weight:900;background:#d97706;color:#1a0f08}
@@ -201,7 +234,9 @@
    <div id="phoneViewHome" class="phoneView">
     <div class="phoneWelcomeCard"><div><small>PIXELPHONE OS · TECLA C</small><strong id="phoneHomeBalance">R$ 500</strong></div><div style="text-align:right"><small>CORRIDAS</small><strong id="phoneHomeWins" style="font-size:14px;color:#98e274">0 vitórias</strong></div></div>
     <div class="phoneAppGrid">
-     <button class="phoneAppBtn" id="appOpenRace"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#dc2626,#991b1b)">🏁</div><span>Corridas</span></button>
+     <button class="phoneAppBtn" id="appOpenIfuud"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#ea1d2c,#991b1b)">🛵</div><span>iFuud</span></button>
+     <button class="phoneAppBtn" id="appOpenFreight"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#f59e0b,#92400e)">🚚</div><span>Fretes</span></button>
+     <button class="phoneAppBtn" id="appOpenRace"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#dc2626,#7f1d1d)">🏁</div><span>Corridas</span></button>
      <button class="phoneAppBtn" id="appOpenShop"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#eab308,#854d0e)">🛒</div><span>Loja</span></button>
      <button class="phoneAppBtn" id="appOpenGarage"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#2563eb,#1e3a8a)">🚗</div><span>Garagem</span></button>
      <button class="phoneAppBtn" id="appOpenBank"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#16a34a,#14532d)">🏦</div><span>PixelBank</span></button>
@@ -210,6 +245,24 @@
      <button class="phoneAppBtn" id="appToggleWeather"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#7c3aed,#3b0764)">☀</div><span>Clima</span></button>
      <button class="phoneAppBtn" id="appToggleSound"><div class="phoneAppIcon" style="background:linear-gradient(135deg,#0d9488,#134e4a)">♫</div><span>Som</span></button>
     </div>
+   </div>
+   <div id="phoneViewFreight" class="phoneView hidden">
+    <div class="phoneAppSub"><button class="phoneBackBtn" id="freightBackHome">←</button><strong style="color:#fde68a">🚚 BRASIL FRETES PRO</strong></div>
+    <div id="freightTruckBanner" class="ifuudAlert warn"></div>
+    <div class="freightDestRow">
+     <input id="freightDestInput" autocomplete="off" placeholder="Digite destino (rua, bairro ou cidade)..." aria-label="Destino do frete">
+     <button id="freightCalcBtn" type="button">CALCULAR</button>
+    </div>
+    <div class="freightSugList" id="freightSuggestList"></div>
+    <div class="freightQuoteBox hidden" id="freightQuoteCard"></div>
+    <div class="ifuudOrderList" id="freightOffersList" style="max-height:135px"></div>
+    <button class="phoneSecondaryBtn" id="freightRerollBtn">🔄 GERAR NOVOS FRETES NA REGIÃO</button>
+   </div>
+   <div id="phoneViewIfuud" class="phoneView hidden">
+    <div class="phoneAppSub"><button class="phoneBackBtn" id="ifuudBackHome">←</button><strong style="color:#fda4af">🛵 iFUUD ENTREGAS</strong></div>
+    <div id="ifuudMotoBanner" class="ifuudAlert"></div>
+    <div class="ifuudOrderList" id="ifuudOrderList"></div>
+    <button class="phoneSecondaryBtn" id="ifuudRerollBtn">🔄 ATUALIZAR PEDIDOS NA REGIÃO</button>
    </div>
    <div id="phoneViewRace" class="phoneView hidden">
     <div class="phoneAppSub"><button class="phoneBackBtn" id="raceBackHome">←</button><strong>🏁 CORRIDAS DE RUA</strong></div>
@@ -248,9 +301,11 @@
     <div class="bankHistory" id="bankHistoryList"></div>
    </div>
    <div id="phoneViewShop" class="phoneView hidden">
-    <div class="phoneAppSub"><button class="phoneBackBtn" id="shopBackHome">←</button><strong>🛒 LOJA DE CARROS</strong></div>
+    <div class="phoneAppSub"><button class="phoneBackBtn" id="shopBackHome">←</button><strong>🛒 LOJA DE VEÍCULOS</strong></div>
     <div class="shopTabs" id="shopTabs">
      <button class="shopTabBtn active" data-cat="all">Todos</button>
+     <button class="shopTabBtn" data-cat="moto">🏍 Motos</button>
+     <button class="shopTabBtn" data-cat="truck">🚛 Caminhões</button>
      <button class="shopTabBtn" data-cat="popular">Populares</button>
      <button class="shopTabBtn" data-cat="tuning">Tuning</button>
      <button class="shopTabBtn" data-cat="super">Super</button>
@@ -259,7 +314,7 @@
     <div class="carGrid" id="shopCarList"></div>
    </div>
    <div id="phoneViewGarage" class="phoneView hidden">
-    <div class="phoneAppSub"><button class="phoneBackBtn" id="garageBackHome">←</button><strong>🚗 MINHA GARAGEM</strong><span id="garageCount" style="margin-left:auto;font-size:9.5px;color:#98e274;font-weight:800">1/60</span></div>
+    <div class="phoneAppSub"><button class="phoneBackBtn" id="garageBackHome">←</button><strong>🏍 MINHA GARAGEM</strong><span id="garageCount" style="margin-left:auto;font-size:9.5px;color:#98e274;font-weight:800">1/102</span></div>
     <div class="carGrid" id="garageCarList"></div>
    </div>
   </div>
@@ -300,17 +355,24 @@ const TAU=Math.PI*2, clamp=(n,a,b)=>Math.max(a,Math.min(b,n)), lerp=(a,b,t)=>a+(
 const themes={grass:'#527b53',grass2:'#486f49',road:'#444853',roadEdge:'#2e323a',roadLine:'#e8dec2',sidewalk:'#ccc2ae',sidewalkEdge:'#7f786c',parks:'#5c8a5e',water:'#2d6c82'};
 const roadWidths={motorway:22,motorway_link:11.5,trunk:18,trunk_link:11,primary:15,primary_link:10.5,secondary:13,secondary_link:10,tertiary:11,tertiary_link:9.5,residential:8.8,unclassified:8.8,living_street:6.8,track:6.4,service:5.8,pedestrian:6,road:8.2};
 const carPalette=['#e2e8f0','#cbd5e1','#334155','#b91c1c','#1d4ed8','#d97706','#0f766e','#f8fafc','#475569','#7c2d12','#15803d','#64748b'];
-const CAR_ATLAS={img:null,ready:false,loading:false,cellW:80,cellH:112};
-function ensureCarAtlas(){
- if(CAR_ATLAS.loading||CAR_ATLAS.img)return CAR_ATLAS;
- CAR_ATLAS.loading=true;
+const VEHICLE_ATLASES={
+ car:{img:null,ready:false,loading:false,src:'assets/cars_atlas.png',cellW:80,cellH:112},
+ moto:{img:null,ready:false,loading:false,src:'assets/motos_atlas.png',cellW:80,cellH:112},
+ truck:{img:null,ready:false,loading:false,src:'assets/trucks_atlas.png',cellW:80,cellH:392}
+};
+const CAR_ATLAS=VEHICLE_ATLASES.car;
+function ensureVehicleAtlas(kind='car'){
+ const a=VEHICLE_ATLASES[kind]||VEHICLE_ATLASES.car;
+ if(a.loading||a.img)return a;
+ a.loading=true;
  const im=new Image();
- im.onload=()=>{CAR_ATLAS.ready=true;};
- im.onerror=()=>{CAR_ATLAS.loading=false;};
- im.src='assets/cars_atlas.png';
- CAR_ATLAS.img=im;
- return CAR_ATLAS;
+ im.onload=()=>{a.ready=true;};
+ im.onerror=()=>{a.loading=false;};
+ im.src=a.src;
+ a.img=im;
+ return a;
 }
+function ensureCarAtlas(){return ensureVehicleAtlas('car');}
 const CAR_CATALOG=[
  {id:'c_0_0',r:0,c:0,name:'Fusca Azul Clássico',cat:'popular',price:0,accel:0.86,top:0.86,len:4.45},
  {id:'c_0_1',r:0,c:1,name:'Fusca Cereja',cat:'popular',price:200,accel:0.86,top:0.86,len:4.45},
@@ -371,10 +433,101 @@ const CAR_CATALOG=[
  {id:'c_3_10',r:3,c:10,name:'Hot Rod Chamas Rubi',cat:'especial',price:15000,accel:1.39,top:1.37,len:4.9},
  {id:'c_3_7',r:3,c:7,name:'Viper Chamas Roxo',cat:'especial',price:17000,accel:1.42,top:1.39,len:4.92},
  {id:'c_3_8',r:3,c:8,name:'Dragster Chamas Ultra',cat:'especial',price:19000,accel:1.45,top:1.41,len:4.92},
- {id:'c_3_6',r:3,c:6,name:'Batmóvel Clássico',cat:'especial',price:22000,accel:1.50,top:1.45,len:5.15}
+ {id:'c_3_6',r:3,c:6,name:'Batmóvel Clássico',cat:'especial',price:22000,accel:1.50,top:1.45,len:5.15},
+ {id:'m_0_0',r:0,c:0,kind:'moto',cat:'moto',name:'Scooter Pop Rubi',price:150,accel:0.92,top:0.86,len:2.48},
+ {id:'m_0_1',r:0,c:1,kind:'moto',cat:'moto',name:'Scooter Pop Azul',price:170,accel:0.93,top:0.87,len:2.48},
+ {id:'m_0_2',r:0,c:2,kind:'moto',cat:'moto',name:'Scooter Urbana Branca',price:190,accel:0.94,top:0.88,len:2.48},
+ {id:'m_0_3',r:0,c:3,kind:'moto',cat:'moto',name:'Scooter Urbana Solar',price:210,accel:0.95,top:0.89,len:2.48},
+ {id:'m_1_0',r:1,c:0,kind:'moto',cat:'moto',name:'Scooter Baú iFuud Rubi',price:240,accel:0.97,top:0.91,len:2.58,deliveryBox:true},
+ {id:'m_1_1',r:1,c:1,kind:'moto',cat:'moto',name:'Scooter Baú Azul',price:260,accel:0.98,top:0.92,len:2.58,deliveryBox:true},
+ {id:'m_2_1',r:2,c:1,kind:'moto',cat:'moto',name:'Moto Baú Laranja Express',price:290,accel:1.02,top:0.95,len:2.68,deliveryBox:true},
+ {id:'m_1_2',r:1,c:2,kind:'moto',cat:'moto',name:'Scooter GT Branca',price:320,accel:0.99,top:0.93,len:2.52},
+ {id:'m_2_2',r:2,c:2,kind:'moto',cat:'moto',name:'Moto Baú Preta Cargo',price:340,accel:1.04,top:0.96,len:2.68,deliveryBox:true},
+ {id:'m_1_3',r:1,c:3,kind:'moto',cat:'moto',name:'Scooter GT Amarela',price:350,accel:1.00,top:0.94,len:2.52},
+ {id:'m_2_3',r:2,c:3,kind:'moto',cat:'moto',name:'Moto Baú Marrom Pro',price:390,accel:1.06,top:0.97,len:2.68,deliveryBox:true},
+ {id:'m_0_4',r:0,c:4,kind:'moto',cat:'moto',name:'Street 160 Vermelha',price:550,accel:1.08,top:0.99,len:2.62},
+ {id:'m_0_5',r:0,c:5,kind:'moto',cat:'moto',name:'Street 160 Rubi',price:600,accel:1.09,top:1.00,len:2.62},
+ {id:'m_0_6',r:0,c:6,kind:'moto',cat:'moto',name:'Street 250 Preta',price:680,accel:1.10,top:1.01,len:2.64},
+ {id:'m_0_7',r:0,c:7,kind:'moto',cat:'moto',name:'Street 250 Grafite',price:740,accel:1.11,top:1.02,len:2.64},
+ {id:'m_0_8',r:0,c:8,kind:'moto',cat:'moto',name:'Street 300 Marinho',price:800,accel:1.12,top:1.03,len:2.66},
+ {id:'m_0_9',r:0,c:9,kind:'moto',cat:'moto',name:'Street 300 Prata',price:850,accel:1.13,top:1.03,len:2.66},
+ {id:'m_0_10',r:0,c:10,kind:'moto',cat:'moto',name:'Sporty 350 Rubi-Branca',price:900,accel:1.14,top:1.04,len:2.68},
+ {id:'m_0_11',r:0,c:11,kind:'moto',cat:'moto',name:'Sporty 350 Azul-Rubi',price:950,accel:1.15,top:1.05,len:2.68},
+ {id:'m_1_4',r:1,c:4,kind:'moto',cat:'moto',name:'Naked 500 Vermelha',price:1100,accel:1.17,top:1.06,len:2.68},
+ {id:'m_1_5',r:1,c:5,kind:'moto',cat:'moto',name:'Naked 500 Stealth',price:1220,accel:1.18,top:1.07,len:2.68},
+ {id:'m_2_0',r:2,c:0,kind:'moto',cat:'moto',name:'Trail Verde Aventura',price:1350,accel:1.19,top:1.07,len:2.72},
+ {id:'m_1_6',r:1,c:6,kind:'moto',cat:'moto',name:'Naked 600 Azul',price:1450,accel:1.20,top:1.08,len:2.7},
+ {id:'m_1_7',r:1,c:7,kind:'moto',cat:'moto',name:'Naked 650 Azul GT',price:1580,accel:1.21,top:1.09,len:2.7},
+ {id:'m_2_4',r:2,c:4,kind:'moto',cat:'moto',name:'Touring Azul Sport',price:1650,accel:1.21,top:1.10,len:2.72},
+ {id:'m_1_8',r:1,c:8,kind:'moto',cat:'moto',name:'Racing 650 Vermelha',price:1750,accel:1.22,top:1.11,len:2.7},
+ {id:'m_2_5',r:2,c:5,kind:'moto',cat:'moto',name:'Touring Cinza Titânio',price:1850,accel:1.23,top:1.12,len:2.72},
+ {id:'m_1_9',r:1,c:9,kind:'moto',cat:'moto',name:'Racing 750 Prata',price:1950,accel:1.24,top:1.13,len:2.72},
+ {id:'m_1_10',r:1,c:10,kind:'moto',cat:'moto',name:'GP Tricolor Classic',price:2050,accel:1.25,top:1.14,len:2.72},
+ {id:'m_1_11',r:1,c:11,kind:'moto',cat:'moto',name:'GP Tricolor Corsa',price:2150,accel:1.26,top:1.15,len:2.72},
+ {id:'m_3_0',r:3,c:0,kind:'moto',cat:'moto',name:'Superbike Verde Kawasaki',price:2450,accel:1.28,top:1.17,len:2.75},
+ {id:'m_3_1',r:3,c:1,kind:'moto',cat:'moto',name:'Superbike Laranja GP',price:2750,accel:1.30,top:1.18,len:2.75},
+ {id:'m_3_2',r:3,c:2,kind:'moto',cat:'moto',name:'Superbike Esmeralda RR',price:3050,accel:1.31,top:1.20,len:2.75},
+ {id:'m_3_3',r:3,c:3,kind:'moto',cat:'moto',name:'Superbike Laranja Track',price:3350,accel:1.33,top:1.21,len:2.75},
+ {id:'m_3_4',r:3,c:4,kind:'moto',cat:'moto',name:'Superbike Carbono R',price:3650,accel:1.34,top:1.23,len:2.75},
+ {id:'m_3_5',r:3,c:5,kind:'moto',cat:'moto',name:'Superbike Ouro 1000',price:3950,accel:1.36,top:1.25,len:2.75},
+ {id:'m_3_6',r:3,c:6,kind:'moto',cat:'moto',name:'Custom Chamas V-Twin',price:4500,accel:1.34,top:1.26,len:2.88},
+ {id:'m_3_7',r:3,c:7,kind:'moto',cat:'moto',name:'Cruiser Cobalto Chrome',price:5100,accel:1.36,top:1.28,len:2.88},
+ {id:'m_3_8',r:3,c:8,kind:'moto',cat:'moto',name:'Cruiser Rubi Estrada',price:5600,accel:1.38,top:1.29,len:2.88},
+ {id:'m_3_9',r:3,c:9,kind:'moto',cat:'moto',name:'Cruiser Âmbar Estrada',price:6200,accel:1.40,top:1.31,len:2.88},
+ {id:'m_3_10',r:3,c:10,kind:'moto',cat:'moto',name:'Interceptora Polícia R',price:7800,accel:1.43,top:1.34,len:2.94},
+ {id:'m_3_11',r:3,c:11,kind:'moto',cat:'moto',name:'Touring Bagger Elite',price:9500,accel:1.46,top:1.37,len:2.96},
+ {id:'t_0',r:0,c:0,kind:'truck',cat:'truck',name:'Picape Compacta Rubi',price:450,accel:0.94,top:0.94,len:4.9,tier:1,freightMult:1.15,articulated:false,tr:{sx:12,sy:4,sw:56,sh:113}},
+ {id:'t_1',r:0,c:1,kind:'truck',cat:'truck',name:'Picape Estendida Azul',price:520,accel:0.95,top:0.95,len:5.2,tier:1,freightMult:1.20,articulated:false,tr:{sx:90,sy:4,sw:60,sh:131}},
+ {id:'t_2',r:0,c:2,kind:'truck',cat:'truck',name:'Picape Dupla Prata',price:600,accel:0.95,top:0.95,len:5.3,tier:1,freightMult:1.24,articulated:false,tr:{sx:169,sy:4,sw:63,sh:137}},
+ {id:'t_3',r:0,c:3,kind:'truck',cat:'truck',name:'Picape Heavy Rubi',price:680,accel:0.96,top:0.96,len:5.4,tier:1,freightMult:1.26,articulated:false,tr:{sx:246,sy:4,sw:69,sh:139}},
+ {id:'t_4',r:0,c:4,kind:'truck',cat:'truck',name:'Furgão Urbano Prata',price:740,accel:0.91,top:0.90,len:5.2,tier:1,freightMult:1.28,articulated:false,tr:{sx:326,sy:4,sw:69,sh:127}},
+ {id:'t_5',r:0,c:5,kind:'truck',cat:'truck',name:'Van Carga Branca',price:780,accel:0.92,top:0.91,len:5.1,tier:1,freightMult:1.30,articulated:false,tr:{sx:408,sy:4,sw:65,sh:121}},
+ {id:'t_6',r:0,c:6,kind:'truck',cat:'truck',name:'Picape Obra Pedras',price:820,accel:0.93,top:0.92,len:5.25,tier:1,freightMult:1.32,articulated:false,tr:{sx:488,sy:4,sw:65,sh:128}},
+ {id:'t_7',r:0,c:7,kind:'truck',cat:'truck',name:'Furgão Longo Branco',price:890,accel:0.91,top:0.92,len:5.45,tier:1,freightMult:1.34,articulated:false,tr:{sx:567,sy:4,sw:66,sh:135}},
+ {id:'t_8',r:0,c:8,kind:'truck',cat:'truck',name:'Picape V8 Laranja',price:940,accel:0.98,top:0.97,len:5.4,tier:1,freightMult:1.36,articulated:false,tr:{sx:647,sy:4,sw:67,sh:137}},
+ {id:'t_9',r:0,c:9,kind:'truck',cat:'truck',name:'Picape Utilitária Cinza',price:980,accel:0.96,top:0.95,len:5.1,tier:1,freightMult:1.38,articulated:false,tr:{sx:726,sy:4,sw:69,sh:121}},
+ {id:'t_10',r:1,c:0,kind:'truck',cat:'truck',name:'Picape Lona Bege',price:1040,accel:0.94,top:0.94,len:5.15,tier:1,freightMult:1.40,articulated:false,tr:{sx:8,sy:396,sw:64,sh:121}},
+ {id:'t_11',r:1,c:1,kind:'truck',cat:'truck',name:'Picape Carga Solar',price:1150,accel:0.94,top:0.93,len:5.65,tier:1,freightMult:1.42,articulated:false,tr:{sx:87,sy:396,sw:66,sh:147}},
+ {id:'t_12',r:1,c:2,kind:'truck',cat:'truck',name:'Van Express Amarela',price:1250,accel:0.93,top:0.94,len:5.5,tier:1,freightMult:1.45,articulated:false,tr:{sx:167,sy:396,sw:67,sh:136}},
+ {id:'t_14',r:1,c:4,kind:'truck',cat:'truck',name:'Picape Resgate Amarela',price:1450,accel:0.95,top:0.94,len:5.3,tier:2,freightMult:1.50,articulated:false,tr:{sx:325,sy:396,sw:71,sh:129}},
+ {id:'t_13',r:1,c:3,kind:'truck',cat:'truck',name:'Guincho Plataforma',price:1750,accel:0.86,top:0.88,len:6.2,tier:2,freightMult:1.58,articulated:false,tr:{sx:249,sy:396,sw:63,sh:146}},
+ {id:'t_15',r:1,c:5,kind:'truck',cat:'truck',name:'Caçamba Toco Branca',price:2100,accel:0.82,top:0.86,len:6.6,tier:2,freightMult:1.68,articulated:false,tr:{sx:408,sy:396,sw:65,sh:162}},
+ {id:'t_18',r:1,c:8,kind:'truck',cat:'truck',name:'Coletor Urbano Verde',price:2400,accel:0.80,top:0.85,len:7.0,tier:2,freightMult:1.75,articulated:false,tr:{sx:645,sy:396,sw:71,sh:175}},
+ {id:'t_21',r:2,c:1,kind:'truck',cat:'truck',name:'Coletor Pesado Laranja',price:2550,accel:0.80,top:0.86,len:7.0,tier:2,freightMult:1.80,articulated:false,tr:{sx:85,sy:788,sw:71,sh:175}},
+ {id:'t_24',r:2,c:4,kind:'truck',cat:'truck',name:'Caminhão Carroceria Prata',price:2850,accel:0.83,top:0.88,len:7.4,tier:2,freightMult:1.88,articulated:false,tr:{sx:324,sy:788,sw:72,sh:184}},
+ {id:'t_16',r:1,c:6,kind:'truck',cat:'truck',name:'Caminhão Bebidas Express',price:3150,accel:0.82,top:0.87,len:7.7,tier:2,freightMult:1.95,articulated:false,tr:{sx:484,sy:396,sw:72,sh:194}},
+ {id:'t_28',r:2,c:8,kind:'truck',cat:'truck',name:'Basculante Obra Amarela',price:3450,accel:0.81,top:0.87,len:7.9,tier:2,freightMult:2.02,articulated:false,tr:{sx:644,sy:788,sw:73,sh:201}},
+ {id:'t_27',r:2,c:7,kind:'truck',cat:'truck',name:'Betoneira Industrial Pro',price:3800,accel:0.78,top:0.86,len:8.4,tier:2,freightMult:2.10,articulated:false,tr:{sx:564,sy:788,sw:73,sh:213}},
+ {id:'t_26',r:2,c:6,kind:'truck',cat:'truck',name:'Basculante Bruta Verde',price:4100,accel:0.78,top:0.87,len:8.9,tier:2,freightMult:2.16,articulated:false,tr:{sx:483,sy:788,sw:75,sh:232}},
+ {id:'t_19',r:1,c:9,kind:'truck',cat:'truck',name:'Carreta Tanque Branca',price:4800,accel:0.77,top:0.89,len:9.8,tier:3,freightMult:2.35,articulated:true,tr:{sx:725,sy:396,sw:71,sh:218,cabEndY:63,trStartY:60,hitchY:56}},
+ {id:'t_22',r:2,c:2,kind:'truck',cat:'truck',name:'Carreta Tanque Laranja',price:5200,accel:0.78,top:0.90,len:10.0,tier:3,freightMult:2.42,articulated:true,tr:{sx:165,sy:788,sw:71,sh:221,cabEndY:64,trStartY:61,hitchY:57}},
+ {id:'t_25',r:2,c:5,kind:'truck',cat:'truck',name:'Carreta Caçamba Rubi',price:5800,accel:0.79,top:0.90,len:10.8,tier:3,freightMult:2.55,articulated:true,tr:{sx:405,sy:788,sw:71,sh:263,cabEndY:76,trStartY:73,hitchY:68}},
+ {id:'t_20',r:2,c:0,kind:'truck',cat:'truck',name:'Carreta Bombeiro Tanque',price:6400,accel:0.82,top:0.92,len:11.0,tier:3,freightMult:2.62,articulated:true,tr:{sx:5,sy:788,sw:71,sh:270,cabEndY:83,trStartY:74,hitchY:75}},
+ {id:'t_17',r:1,c:7,kind:'truck',cat:'truck',name:'Carreta Bombeiro Escada',price:6900,accel:0.83,top:0.93,len:11.5,tier:3,freightMult:2.70,articulated:true,tr:{sx:565,sy:396,sw:70,sh:289,cabEndY:83,trStartY:74,hitchY:75}},
+ {id:'t_23',r:2,c:3,kind:'truck',cat:'truck',name:'Carreta Sider Lona Azul',price:7400,accel:0.80,top:0.92,len:11.4,tier:3,freightMult:2.80,articulated:true,tr:{sx:243,sy:788,sw:74,sh:281,cabEndY:66,trStartY:63,hitchY:59}},
+ {id:'t_29',r:2,c:9,kind:'truck',cat:'truck',name:'Carreta Baú Seco Branca',price:8200,accel:0.81,top:0.94,len:11.7,tier:4,freightMult:2.92,articulated:true,tr:{sx:724,sy:788,sw:72,sh:292,cabEndY:63,trStartY:60,hitchY:56}},
+ {id:'t_30',r:3,c:0,kind:'truck',cat:'truck',name:'Carreta Aero Prata',price:9200,accel:0.83,top:0.96,len:12.4,tier:4,freightMult:3.05,articulated:true,tr:{sx:4,sy:1180,sw:72,sh:312,cabEndY:63,trStartY:60,hitchY:56}},
+ {id:'t_37',r:3,c:7,kind:'truck',cat:'truck',name:'Carreta Tanque Longo',price:10400,accel:0.84,top:0.97,len:13.0,tier:4,freightMult:3.20,articulated:true,tr:{sx:565,sy:1180,sw:71,sh:338,cabEndY:63,trStartY:60,hitchY:55}},
+ {id:'t_34',r:3,c:4,kind:'truck',cat:'truck',name:'Carreta Frigorífico Azul',price:11500,accel:0.85,top:0.98,len:13.1,tier:4,freightMult:3.32,articulated:true,tr:{sx:325,sy:1180,sw:70,sh:338,cabEndY:56,trStartY:53,hitchY:49}},
+ {id:'t_32',r:3,c:2,kind:'truck',cat:'truck',name:'Carreta Aero Prata Max',price:12600,accel:0.86,top:0.99,len:13.3,tier:4,freightMult:3.45,articulated:true,tr:{sx:163,sy:1180,sw:74,sh:343,cabEndY:56,trStartY:53,hitchY:49}},
+ {id:'t_31',r:3,c:1,kind:'truck',cat:'truck',name:'Carreta Container Azul 40ft',price:14200,accel:0.87,top:1.01,len:13.6,tier:5,freightMult:3.60,articulated:true,tr:{sx:85,sy:1180,sw:71,sh:353,cabEndY:63,trStartY:60,hitchY:55}},
+ {id:'t_33',r:3,c:3,kind:'truck',cat:'truck',name:'Carreta Tri-Container Solar',price:16200,accel:0.88,top:1.03,len:13.7,tier:5,freightMult:3.75,articulated:true,tr:{sx:245,sy:1180,sw:71,sh:353,cabEndY:78,trStartY:75,hitchY:70}},
+ {id:'t_36',r:3,c:6,kind:'truck',cat:'truck',name:'Carreta Baú Giga Rubi',price:18000,accel:0.90,top:1.05,len:14.1,tier:5,freightMult:3.90,articulated:true,tr:{sx:485,sy:1180,sw:70,sh:369,cabEndY:56,trStartY:53,hitchY:49}},
+ {id:'t_35',r:3,c:5,kind:'truck',cat:'truck',name:'Carreta Bi-Container Elite',price:20500,accel:0.92,top:1.08,len:14.6,tier:5,freightMult:4.15,articulated:true,tr:{sx:405,sy:1180,sw:70,sh:379,cabEndY:78,trStartY:75,hitchY:70}}
 ];
 const CAR_MAP=new Map(CAR_CATALOG.map(c=>[c.id,c]));
-const state={world:null,player:{x:0,y:0,angle:-Math.PI/2,speed:0,odometer:0,score:0,cash:500,carId:'c_0_0',onBridge:false,bridgeElev:0},cam:{x:0,y:0},keys:{},zoom:6.8,mode:'sun',dayPhase:0.37,traffic:[],parkedCars:[],people:[],skids:[],dust:[],rain:[],route:null,navGoal:null,mission:null,race:null,bankHistory:[{label:'Saldo inicial PixelBank',amount:500,at:'Início',kind:'bonus'}],raceStats:{races:0,wins:0,bestEarned:0},ownedCars:['c_0_0'],equippedCar:'c_0_0',lastBonusAt:0,paused:false,loading:false,driveTime:0,trafficEnabled:true,last:0,raf:0,screenW:1,screenH:1,renderW:1,renderH:1,sound:false,audio:null,engine:null,manualSteer:0,downshift:false,cacheRaw:null,now:0,minimapExpanded:false,routeTimer:0,tipDismissed:false,viewMode:'pixel',wantedCesium:false};
+const RACE_CAR_POOL=CAR_CATALOG.filter(c=>c.kind!=='moto'&&c.kind!=='truck');
+const isMotoItem=(id)=>Boolean(id&&CAR_MAP.get(id)?.kind==='moto');
+const isTruckItem=(id)=>Boolean(id&&CAR_MAP.get(id)?.kind==='truck');
+const isPlayerRidingMoto=()=>Boolean(!state.player.onFoot&&(state.player.vkind==='moto'||isMotoItem(state.player.carId)));
+const isPlayerDrivingTruck=()=>Boolean(!state.player.onFoot&&isTruckItem(state.player.carId));
+function vehicleKindForItem(car){
+ if(!car)return 'sport';
+ if(car.kind==='moto')return 'moto';
+ if(car.kind==='truck')return car.articulated?'semi':(car.len<6?'pickup':'truck');
+ return 'sport';
+}
+const state={world:null,player:{x:0,y:0,angle:-Math.PI/2,trailerAngle:-Math.PI/2,speed:0,odometer:0,score:0,cash:500,carId:'c_0_0',onBridge:false,bridgeElev:0},cam:{x:0,y:0},keys:{},zoom:6.8,mode:'sun',dayPhase:0.37,traffic:[],parkedCars:[],people:[],skids:[],dust:[],rain:[],route:null,navGoal:null,mission:null,ifuud:null,freight:null,race:null,bankHistory:[{label:'Saldo inicial PixelBank',amount:500,at:'Início',kind:'bonus'}],raceStats:{races:0,wins:0,bestEarned:0},ownedCars:['c_0_0'],equippedCar:'c_0_0',lastBonusAt:0,paused:false,loading:false,driveTime:0,trafficEnabled:true,last:0,raf:0,screenW:1,screenH:1,renderW:1,renderH:1,sound:false,audio:null,engine:null,manualSteer:0,downshift:false,cacheRaw:null,now:0,minimapExpanded:false,routeTimer:0,tipDismissed:false,viewMode:'pixel',wantedCesium:false};
 let toastTimer,loadingController=null,weatherTick=0,lastSearch=0,_lastCashHud=-1;
 function toast(message,duration=3100){const el=$('toast');el.textContent=message;el.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('visible'),duration)}
 function note(t){$('tipText').textContent=t;$('tipBar').classList.remove('hidden')}
@@ -413,7 +566,7 @@ function playTone(kind){
  }catch{}
 }
 function persist(){try{localStorage.setItem('pixelruas-save-v2',JSON.stringify({score:state.player.score,cash:state.player.cash,bankHistory:(state.bankHistory||[]).slice(0,18),raceStats:state.raceStats,ownedCars:state.ownedCars,equippedCar:state.equippedCar,lastBonusAt:state.lastBonusAt||0,km:state.player.odometer,zoom:state.zoom,zoomPreferenceVersion:1,weather:state.mode,sound:state.sound,wantedCesium:state.wantedCesium,aerialEnabled:aerial.enabled}))}catch(e){}}
-function loadSave(){try{const p=JSON.parse(localStorage.getItem('pixelruas-save-v2')||'{}');state.player.score=p.score??0;state.player.cash=Number.isFinite(p.cash)?Math.max(0,Math.round(p.cash)):500;if(Array.isArray(p.bankHistory)&&p.bankHistory.length)state.bankHistory=p.bankHistory.slice(0,18);if(p.raceStats)state.raceStats={races:p.raceStats.races||0,wins:p.raceStats.wins||0,bestEarned:p.raceStats.bestEarned||0};if(Array.isArray(p.ownedCars)&&p.ownedCars.length)state.ownedCars=[...new Set(['c_0_0',...p.ownedCars.filter(id=>CAR_MAP.has(id))])];else state.ownedCars=['c_0_0'];state.equippedCar=CAR_MAP.has(p.equippedCar)&&state.ownedCars.includes(p.equippedCar)?p.equippedCar:'c_0_0';state.player.carId=state.equippedCar;state.lastBonusAt=Number(p.lastBonusAt)||0;state.player.odometer=p.km??0;state.zoom=clamp(p.zoomPreferenceVersion===1?(p.zoom??6.8):6.8,2.2,8.2);state.mode=['sun','rain','night'].includes(p.weather)?p.weather:'sun';state.wantedCesium=false;aerial.enabled=p.aerialEnabled===true;ensureCarAtlas();updateAerialButton();updateMoneyHUD(true)}catch(e){}}
+function loadSave(){try{const p=JSON.parse(localStorage.getItem('pixelruas-save-v2')||'{}');state.player.score=p.score??0;state.player.cash=Number.isFinite(p.cash)?Math.max(0,Math.round(p.cash)):500;if(Array.isArray(p.bankHistory)&&p.bankHistory.length)state.bankHistory=p.bankHistory.slice(0,18);if(p.raceStats)state.raceStats={races:p.raceStats.races||0,wins:p.raceStats.wins||0,bestEarned:p.raceStats.bestEarned||0};if(Array.isArray(p.ownedCars)&&p.ownedCars.length)state.ownedCars=[...new Set(['c_0_0',...p.ownedCars.filter(id=>CAR_MAP.has(id))])];else state.ownedCars=['c_0_0'];state.equippedCar=CAR_MAP.has(p.equippedCar)&&state.ownedCars.includes(p.equippedCar)?p.equippedCar:'c_0_0';state.player.carId=state.equippedCar;state.player.vkind=vehicleKindForItem(CAR_MAP.get(state.equippedCar));state.player.trailerAngle=state.player.angle;state.lastBonusAt=Number(p.lastBonusAt)||0;state.player.odometer=p.km??0;state.zoom=clamp(p.zoomPreferenceVersion===1?(p.zoom??6.8):6.8,2.2,8.2);state.mode=['sun','rain','night'].includes(p.weather)?p.weather:'sun';state.wantedCesium=false;aerial.enabled=p.aerialEnabled===true;ensureCarAtlas();ensureVehicleAtlas('moto');ensureVehicleAtlas('truck');updateAerialButton();updateMoneyHUD(true)}catch(e){}}
 function showMap(){
  setModal('pauseModal',false);setModal('mapModal',true);state.paused=true;
  const hasWorld=Boolean(state.world?.real&&!state.world.tileFallback);
@@ -1170,16 +1323,16 @@ function setDestination(x,y,customLabel='',destGeo=null){
  }
  state.routeTimer=1.8;
 }
-function startMission(){if(!state.world||state.loading||state.paused)return;if(state.race){toast('Você está em uma corrida! Conclua ou cancele no botão ×.');return}if(state.mission){toast('Você já está em uma entrega. Siga a rota verde no minimapa.');return}const w=state.world,p=state.player;if(!w?.graph?.length)return;let chosen=null;for(let i=0;i<140;i++){const n=w.graph[Math.floor(hash(i+Math.floor(state.now*13),i+71)*w.graph.length)];if(!n||hypot(n.x-p.x,n.y-p.y)<210||hypot(n.x-p.x,n.y-p.y)>900)continue;const rt=computeRoute(p.x,p.y,{x:n.x,y:n.y});if(!rt||rt.length<220||rt.length>1800)continue;if(!chosen||Math.abs(rt.length-570)<Math.abs(chosen.route.length-570))chosen={point:n,route:rt};if(Math.abs(rt.length-570)<50)break}if(!chosen)return toast('Não encontrei um destino acessível nessa região. Explore mais ruas.');state.navGoal={x:chosen.point.x,y:chosen.point.y};state.route=chosen.route;const time=clamp(Math.floor(chosen.route.length/8+55),75,300);state.mission={remaining:time,total:time,lateNotified:false};state.routeTimer=2;$('navType').textContent='ENTREGA EM ANDAMENTO';$('missionCountdown').classList.remove('hidden');$('navigation').classList.remove('hidden');toast('⚑ NOVA ENTREGA! Siga a rota e chegue antes do tempo acabar.',4200)}
-function clearDestination(){longRouteController?.abort();if(state.race){state.race=null;$('raceLights')?.classList.add('hidden');toast('Corrida cancelada.');}state.navGoal=null;state.route=null;state.mission=null;$('missionCountdown').classList.add('hidden');$('navType').textContent='DESTINO DEFINIDO';$('navigation').classList.add('hidden')}
+function startMission(){if(!state.world||state.loading||state.paused)return;if(state.race){toast('Você está em uma corrida! Conclua ou cancele no botão ×.');return}if(state.ifuud){toast('Conclua ou cancele o pedido iFuud no botão × primeiro.');return}if(state.freight){toast('Conclua ou cancele o frete atual no botão × primeiro.');return}if(state.mission){toast('Você já está em uma entrega. Siga a rota verde no minimapa.');return}const w=state.world,p=state.player;if(!w?.graph?.length)return;let chosen=null;for(let i=0;i<140;i++){const n=w.graph[Math.floor(hash(i+Math.floor(state.now*13),i+71)*w.graph.length)];if(!n||hypot(n.x-p.x,n.y-p.y)<210||hypot(n.x-p.x,n.y-p.y)>900)continue;const rt=computeRoute(p.x,p.y,{x:n.x,y:n.y});if(!rt||rt.length<220||rt.length>1800)continue;if(!chosen||Math.abs(rt.length-570)<Math.abs(chosen.route.length-570))chosen={point:n,route:rt};if(Math.abs(rt.length-570)<50)break}if(!chosen)return toast('Não encontrei um destino acessível nessa região. Explore mais ruas.');state.navGoal={x:chosen.point.x,y:chosen.point.y};state.route=chosen.route;const time=clamp(Math.floor(chosen.route.length/8+55),75,300);state.mission={remaining:time,total:time,lateNotified:false};state.routeTimer=2;$('navType').textContent='ENTREGA EM ANDAMENTO';$('missionCountdown').classList.remove('hidden');$('navigation').classList.remove('hidden');toast('⚑ NOVA ENTREGA! Siga a rota e chegue antes do tempo acabar.',4200)}
+function clearDestination(){longRouteController?.abort();if(state.race){state.race=null;$('raceLights')?.classList.add('hidden');toast('Corrida cancelada.');}if(state.ifuud){state.ifuud=null;toast('Pedido iFuud cancelado.');}if(state.freight){state.freight=null;toast('Frete cancelado.');}state.navGoal=null;state.route=null;state.mission=null;$('missionCountdown').classList.add('hidden');$('navType').textContent='DESTINO DEFINIDO';$('navigation').classList.add('hidden')}
 
-// PixelPhone (tecla C): Loja (60 carros), Garagem, Corridas (5 rivais + semáforo) e PixelBank
+// PixelPhone (tecla C): Fretes (caminhões/carretas), iFuud (motos), Loja, Garagem, Corridas e PixelBank
 const RACE_MODES={
  sprint:{label:'Sprint Urbano',pts:5,targetSeg:175,speedMs:14.2,mult:2.2},
  circuit:{label:'Circuito Cidade',pts:8,targetSeg:220,speedMs:15.0,mult:2.6},
  marathon:{label:'Desafio Longo',pts:11,targetSeg:265,speedMs:15.8,mult:3.2}
 };
-const phoneUi={open:false,app:'home',mode:'sprint',bet:50,draft:null,shopCat:'all'};
+const phoneUi={open:false,app:'home',mode:'sprint',bet:50,draft:null,shopCat:'all',ifuudOffers:[],freightOffers:[],freightQuote:null,freightSearching:false};
 function phoneOpen(){return Boolean(phoneUi.open)}
 function showPhone(app='home'){
  if(state.loading)return;
@@ -1196,6 +1349,8 @@ function hidePhone(){
 function openPhoneApp(app){
  phoneUi.app=app;
  $('phoneViewHome').classList.toggle('hidden',app!=='home');
+ $('phoneViewFreight')?.classList.toggle('hidden',app!=='freight');
+ $('phoneViewIfuud')?.classList.toggle('hidden',app!=='ifuud');
  $('phoneViewRace').classList.toggle('hidden',app!=='race');
  $('phoneViewBank').classList.toggle('hidden',app!=='bank');
  $('phoneViewShop').classList.toggle('hidden',app!=='shop');
@@ -1205,6 +1360,12 @@ function openPhoneApp(app){
   $('phoneHomeWins').textContent=`${state.raceStats?.wins||0} vitória${(state.raceStats?.wins||0)===1?'':'s'}`;
   const wb=$('appToggleWeather')?.querySelector('.phoneAppIcon');if(wb)wb.textContent={sun:'☀',rain:'☂',night:'☾'}[state.mode]||'☀';
   const sb=$('appToggleSound')?.querySelector('.phoneAppIcon');if(sb)sb.textContent=state.sound?'♪':'♫';
+ }else if(app==='freight'){
+  if(!phoneUi.freightOffers?.length)generateFreightOffers();
+  renderPhoneFreight();
+ }else if(app==='ifuud'){
+  if(!phoneUi.ifuudOffers?.length)generateIfuudOffers();
+  renderPhoneIfuud();
  }else if(app==='race'){
   generateRaceDraft(phoneUi.mode);
  }else if(app==='bank'){
@@ -1219,24 +1380,47 @@ function createCarCardEl(car,mode='shop'){
  const card=document.createElement('div');
  const owned=state.ownedCars.includes(car.id),equipped=state.equippedCar===car.id;
  card.className='carCard'+(equipped?' equipped':owned?' owned':'');
- const spr=document.createElement('div');spr.className='carCardSprite';
- spr.style.backgroundPosition=`-${car.c*40}px -${car.r*56}px`;
+ const spr=document.createElement('div');
+ if(car.kind==='truck'){
+  spr.className='carCardSprite isTruck';
+  const tr=car.tr,cv=document.createElement('canvas');
+  cv.width=44;cv.height=58;
+  const atl=ensureVehicleAtlas('truck');
+  const drawThumb=()=>{
+   if(!atl.ready||!tr)return;
+   const ctx2=cv.getContext('2d');
+   ctx2.clearRect(0,0,44,58);
+   ctx2.imageSmoothingEnabled=false;
+   const sc=Math.min(40/tr.sw,54/tr.sh);
+   const dw=Math.round(tr.sw*sc),dh=Math.round(tr.sh*sc);
+   ctx2.drawImage(atl.img,tr.sx,tr.sy,tr.sw,tr.sh,Math.round((44-dw)/2),Math.round((58-dh)/2),dw,dh);
+  };
+  if(atl.ready)drawThumb();
+  else if(atl.img)atl.img.addEventListener('load',drawThumb,{once:true});
+  spr.appendChild(cv);
+ }else{
+  spr.className='carCardSprite'+(car.kind==='moto'?' isMoto':'');
+  spr.style.backgroundPosition=`-${car.c*40}px -${car.r*56}px`;
+ }
+ const tag=document.createElement('span');
+ tag.className='carCardTag'+(car.kind==='moto'?' moto':car.kind==='truck'?' truck':'');
+ tag.textContent=car.kind==='truck'?(car.articulated?`🚛 CARRETA ${car.freightMult.toFixed(1)}×`:`🚚 CAMINHÃO ${car.freightMult.toFixed(1)}×`):car.deliveryBox?'🛵 BAÚ iFUUD':car.kind==='moto'?'🏍 MOTO':'🚗 CARRO';
  const nm=document.createElement('div');nm.className='carCardName';nm.textContent=car.name;
  const st=document.createElement('div');st.className='carCardStat';
  const topKmh=Math.round(34*car.top*3.6);
- st.innerHTML=`<span>VEL ${topKmh}</span><span>ACEL ${Math.round(car.accel*100)}</span>`;
+ st.innerHTML=car.kind==='truck'?`<span>FRETE ${car.freightMult.toFixed(2)}×</span><span>VEL ${topKmh}</span>`:`<span>VEL ${topKmh}</span><span>ACEL ${Math.round(car.accel*100)}</span>`;
  const btn=document.createElement('button');btn.type='button';btn.dataset.carId=car.id;
  if(equipped){
   btn.className='carActionBtn activeBtn';btn.textContent='✓ EM USO';
  }else if(owned){
-  btn.className='carActionBtn useBtn';btn.textContent=mode==='garage'?'SELECIONAR':'SELECIONAR';
+  btn.className='carActionBtn useBtn';btn.textContent='SELECIONAR';
  }else{
   const ok=(state.player.cash||0)>=car.price;
   btn.className='carActionBtn '+(ok?'buyOk':'buyNo');
   btn.textContent=formatBRL(car.price);
   if(!ok)btn.disabled=true;
  }
- card.append(spr,nm,st,btn);
+ card.append(spr,tag,nm,st,btn);
  return card;
 }
 function renderPhoneShop(){
@@ -1244,7 +1428,7 @@ function renderPhoneShop(){
  document.querySelectorAll('#shopTabs .shopTabBtn').forEach(b=>b.classList.toggle('active',b.dataset.cat===phoneUi.shopCat));
  const list=$('shopCarList');if(!list)return;
  list.textContent='';
- const items=phoneUi.shopCat==='all'?CAR_CATALOG:CAR_CATALOG.filter(c=>c.cat===phoneUi.shopCat);
+ const items=phoneUi.shopCat==='all'?[...CAR_CATALOG].sort((a,b)=>a.price-b.price):CAR_CATALOG.filter(c=>c.cat===phoneUi.shopCat);
  for(const car of items)list.appendChild(createCarCardEl(car,'shop'));
 }
 function renderPhoneGarage(){
@@ -1260,16 +1444,18 @@ function equipGarageCar(carId){
  if(!car||!state.ownedCars.includes(carId))return;
  state.equippedCar=carId;
  const p=state.player;
- p.carId=carId;p.vkind='sport';
+ p.carId=carId;p.vkind=vehicleKindForItem(car);p.trailerAngle=p.angle;
  if(p.onFoot&&state.world){
   if(state.parkedCars)state.parkedCars=state.parkedCars.filter(c=>c.id!==p.vehicleId);
   const rp=closestRoadPoint(p.x,p.y);
-  if(rp){p.x=rp.x;p.y=rp.y;p.angle=Math.atan2(rp.segment.b.y-rp.segment.a.y,rp.segment.b.x-rp.segment.a.x);}
+  if(rp){p.x=rp.x;p.y=rp.y;p.angle=Math.atan2(rp.segment.b.y-rp.segment.a.y,rp.segment.b.x-rp.segment.a.x);p.trailerAngle=p.angle;}
   p.onFoot=false;p.speed=0;p.vx=p.vy=0;updateGameplayHUD();
  }
  playTone('cp');persist();
- if(phoneUi.app==='shop')renderPhoneShop();else if(phoneUi.app==='garage')renderPhoneGarage();
- toast(`🚗 ${car.name} selecionado!`);
+ if(phoneUi.app==='shop')renderPhoneShop();else if(phoneUi.app==='garage')renderPhoneGarage();else if(phoneUi.app==='ifuud')renderPhoneIfuud();else if(phoneUi.app==='freight')renderPhoneFreight();
+ toast(`${car.kind==='moto'?'🏍':car.kind==='truck'?'🚛':'🚗'} ${car.name} selecionado!`);
+ if(state.ifuud&&car.kind!=='moto')toast('🛵 Atenção: entregas iFuud exigem estar de MOTO!',3200);
+ if(state.freight&&car.kind!=='truck')toast('🚚 Atenção: fretes exigem estar dirigindo um CAMINHÃO!',3200);
 }
 function buyShopCar(carId){
  const car=CAR_MAP.get(carId);
@@ -1279,10 +1465,480 @@ function buyShopCar(carId){
  addMoney(-car.price,`Compra: ${car.name}`,'shop');
  state.ownedCars.push(carId);
  state.equippedCar=carId;
- state.player.carId=carId;state.player.vkind='sport';
+ state.player.carId=carId;state.player.vkind=vehicleKindForItem(car);state.player.trailerAngle=state.player.angle;
  playTone('win');persist();
  renderPhoneShop();
  toast(`🎉 Comprou e equipou: ${car.name}!`,3800);
+}
+const IFUUD_MENUS=[
+ {dish:'🍔 Combo Smash + Fritas',rest:'Burger da Vila'},
+ {dish:'🍕 Pizza Calabresa G',rest:'Forno & Massa'},
+ {dish:'🍣 Combinado 24 Peças',rest:'Osaka Express'},
+ {dish:'🥟 Pastel Especial + Suco',rest:'Pastelaria Central'},
+ {dish:'🌯 Wrap Frango & Cheddar',rest:'Point Urbano'},
+ {dish:'🍝 Rondelli Quatro Queijos',rest:'Cantina da Praça'}
+];
+function bldgCenter(b){
+ if(b?.points?.length){
+  let sx=0,sy=0;
+  for(const pt of b.points){sx+=pt.x;sy+=pt.y;}
+  return {x:sx/b.points.length,y:sy/b.points.length};
+ }
+ return b?.bbox?{x:(b.bbox.minX+b.bbox.maxX)*0.5,y:(b.bbox.minY+b.bbox.maxY)*0.5}:null;
+}
+function hasMotoAccess(){
+ return isPlayerRidingMoto()||(state.player.onFoot&&isMotoItem(state.equippedCar));
+}
+function generateIfuudOffers(){
+ phoneUi.ifuudOffers=[];
+ const w=state.world,p=state.player;
+ if(!w?.graph?.length||w.tileFallback||!w.segments?.length)return;
+ const foodRe=/restaur|fast_food|cafe|bakery|pizza|burger|lanch|bar|pub|sorvet|padaria|acai|food|mercado|convenien/i;
+ const foodPois=(w.pois||[]).filter(x=>foodRe.test((x.category||'')+' '+(x.kind||'')+' '+(x.type||'')+' '+(x.name||'')));
+ const bldgs=w.buildings||[];
+ const candRests=[];
+ for(const poi of foodPois){
+  const rp=closestRoadPoint(poi.x,poi.y);
+  if(!rp)continue;
+  const d=hypot(rp.x-p.x,rp.y-p.y);
+  if(d<45||d>1100)continue;
+  candRests.push({name:poi.name||'Lanchonete Local',roadName:rp.segment.road?.name||'Via Comercial',x:rp.x,y:rp.y});
+  if(candRests.length>=12)break;
+ }
+ for(let attempt=0;attempt<40&&candRests.length<6;attempt++){
+  const seg=w.segments[Math.floor(Math.random()*w.segments.length)];
+  if(!seg)continue;
+  const mx=(seg.a.x+seg.b.x)*0.5,my=(seg.a.y+seg.b.y)*0.5;
+  const d=hypot(mx-p.x,my-p.y);
+  if(d<70||d>950)continue;
+  const menu=IFUUD_MENUS[(attempt+candRests.length)%IFUUD_MENUS.length];
+  candRests.push({name:menu.rest,roadName:seg.road?.name||'Avenida Central',x:mx,y:my});
+ }
+ const offers=[];
+ const usedKeys=new Set();
+ for(let i=0;i<candRests.length&&offers.length<3;i++){
+  const rest=candRests[i];
+  const leg1=computeRoute(p.x,p.y,{x:rest.x,y:rest.y});
+  if(!leg1||leg1.length<40||leg1.length>1500)continue;
+  let houseChoice=null;
+  for(let hTry=0;hTry<60;hTry++){
+   let hx,hy,hName='Casa Residencial',roadLabel='Rua Residencial';
+   if(bldgs.length){
+    const b=bldgs[Math.floor(Math.random()*bldgs.length)];
+    const ctr=bldgCenter(b);if(!ctr)continue;
+    const rp=closestRoadPoint(ctr.x,ctr.y);if(!rp)continue;
+    hx=rp.x;hy=rp.y;roadLabel=rp.segment.road?.name||b.suburb||'Rua Residencial';
+    hName=`Casa · ${roadLabel}`.slice(0,32);
+   }else{
+    const n=w.graph[Math.floor(Math.random()*w.graph.length)];
+    if(!n)continue;hx=n.x;hy=n.y;
+   }
+   const dRH=hypot(hx-rest.x,hy-rest.y);
+   if(dRH<180||dRH>1150)continue;
+   const key=Math.round(hx/25)+','+Math.round(hy/25);
+   if(usedKeys.has(key))continue;
+   const leg2=computeRoute(rest.x,rest.y,{x:hx,y:hy});
+   if(!leg2||leg2.length<200||leg2.length>1600)continue;
+   usedKeys.add(key);
+   houseChoice={x:hx,y:hy,name:hName,roadName:roadLabel,route:leg2};
+   break;
+  }
+  if(!houseChoice)continue;
+  const menu=IFUUD_MENUS[(i+Math.floor(Math.random()*IFUUD_MENUS.length))%IFUUD_MENUS.length];
+  const totalDist=leg1.length+houseChoice.route.length;
+  const pay=Math.round(clamp(45+totalDist*0.095,55,210));
+  const timeLimit=Math.round(clamp(totalDist/10+50,65,240));
+  offers.push({id:'if_'+i+'_'+Math.round(rest.x),dish:menu.dish,rest,house:houseChoice,leg1,totalDist,pay,timeLimit});
+ }
+ phoneUi.ifuudOffers=offers;
+}
+function renderPhoneIfuud(){
+ updateMoneyHUD(true);
+ const banner=$('ifuudMotoBanner'),list=$('ifuudOrderList');
+ if(!banner||!list)return;
+ const hasAnyMoto=state.ownedCars.some(id=>isMotoItem(id));
+ const motoReady=hasMotoAccess();
+ banner.className='ifuudAlert'+(motoReady?' ready':'');
+ banner.innerHTML='';
+ if(motoReady){
+  const curId=state.player.onFoot?state.equippedCar:state.player.carId;
+  const motoNm=CAR_MAP.get(curId)?.name||'Moto';
+  banner.textContent=`🛵 Moto conectada (${motoNm})! Aceite um pedido abaixo para retirar no restaurante e entregar na casa.`;
+ }else if(hasAnyMoto){
+  const msg=document.createElement('div');
+  msg.textContent='⚠️ Para rodar no iFuud você precisa estar pilotando uma MOTO (você está de carro).';
+  const row=document.createElement('div');row.className='ifuudQuickRow';
+  const gBtn=document.createElement('button');gBtn.className='alt';gBtn.textContent='🏍 Trocar na Garagem';
+  gBtn.onclick=()=>openPhoneApp('garage');
+  row.appendChild(gBtn);banner.append(msg,row);
+ }else{
+  const msg=document.createElement('div');
+  msg.textContent='🛵 O iFuud só aceita entregas de MOTO! Compre uma scooter ou moto delivery (a partir de R$ 150) na Loja.';
+  const row=document.createElement('div');row.className='ifuudQuickRow';
+  const sBtn=document.createElement('button');sBtn.textContent='🛒 Comprar Moto';
+  sBtn.onclick=()=>{phoneUi.shopCat='moto';openPhoneApp('shop');};
+  row.appendChild(sBtn);banner.append(msg,row);
+ }
+ list.textContent='';
+ if(state.ifuud){
+  const cur=document.createElement('div');cur.className='ifuudOrderCard';
+  const stageTxt=state.ifuud.stage==='pickup'?`📍 Retire em: ${state.ifuud.rest.name}`:`🏠 Entregue em: ${state.ifuud.house.name}`;
+  cur.innerHTML=`<div class="ifuudOrderTop"><span>${state.ifuud.dish}</span><span class="ifuudOrderPay">${formatBRL(state.ifuud.pay)}</span></div><div class="ifuudOrderMeta">${stageTxt}<br>Tempo restante: ${Math.ceil(state.ifuud.remaining)}s</div>`;
+  const cBtn=document.createElement('button');cBtn.className='ifuudAcceptBtn';cBtn.textContent='✕ CANCELAR PEDIDO ATUAL';
+  cBtn.onclick=()=>{clearDestination();renderPhoneIfuud();};
+  cur.appendChild(cBtn);list.appendChild(cur);
+  return;
+ }
+ const offers=phoneUi.ifuudOffers||[];
+ if(!offers.length){
+  const emp=document.createElement('div');emp.className='ifuudOrderCard';
+  emp.innerHTML='<div class="ifuudOrderMeta">Carregue uma cidade real com ruas e casas para receber pedidos iFuud.</div>';
+  list.appendChild(emp);return;
+ }
+ offers.forEach((of,idx)=>{
+  const card=document.createElement('div');card.className='ifuudOrderCard';
+  const km=(of.totalDist/1000).toFixed(2);
+  card.innerHTML=`<div class="ifuudOrderTop"><span>${of.dish}</span><span class="ifuudOrderPay">+${formatBRL(of.pay)}</span></div><div class="ifuudOrderMeta">🍔 <b>Coleta:</b> ${of.rest.name} (${of.rest.roadName})<br>🏠 <b>Casa:</b> ${of.house.name} · ${km} km · ${of.timeLimit}s</div>`;
+  const btn=document.createElement('button');btn.type='button';btn.className='ifuudAcceptBtn';btn.dataset.ifuudIdx=String(idx);
+  btn.textContent=motoReady?'🛵 ACEITAR ENTREGA iFUUD':'🔒 SOMENTE DE MOTO';
+  btn.disabled=!motoReady;
+  card.appendChild(btn);list.appendChild(card);
+ });
+}
+function acceptIfuudOrder(idx){
+ const of=phoneUi.ifuudOffers?.[idx];
+ const w=state.world,p=state.player;
+ if(!of||!w||state.loading)return;
+ if(!hasMotoAccess()){toast('🛵 Você precisa equipar uma MOTO para aceitar pedidos iFuud!');return;}
+ if(p.onFoot&&isMotoItem(state.equippedCar)){
+  if(state.parkedCars)state.parkedCars=state.parkedCars.filter(c=>c.id!==p.vehicleId);
+  const rp=closestRoadPoint(p.x,p.y);
+  if(rp){p.x=rp.x;p.y=rp.y;p.angle=Math.atan2(rp.segment.b.y-rp.segment.a.y,rp.segment.b.x-rp.segment.a.x);}
+  p.carId=state.equippedCar;p.vkind='moto';p.onFoot=false;p.speed=0;p.vx=p.vy=0;updateGameplayHUD();
+ }
+ if(state.race){state.race=null;$('raceLights')?.classList.add('hidden');}
+ state.freight=null;state.mission=null;longRouteController?.abort();
+ state.ifuud={dish:of.dish,rest:of.rest,house:of.house,stage:'pickup',pay:of.pay,remaining:of.timeLimit,totalTime:of.timeLimit};
+ state.navGoal={x:of.rest.x,y:of.rest.y,label:of.rest.name,isIfuud:true};
+ state.route=computeRoute(p.x,p.y,state.navGoal)||of.leg1;
+ state.routeTimer=1.6;
+ $('navType').textContent=`🍔 COLETA: ${of.rest.name}`.toUpperCase().slice(0,36);
+ $('missionCountdown').classList.remove('hidden');
+ $('navigation').classList.remove('hidden');
+ hidePhone();
+ playTone('cp');
+ toast(`🛵 Pedido iFuud aceito! Vá até ${of.rest.name} retirar ${of.dish}.`,4200);
+}
+const FREIGHT_CARGOS=[
+ {name:'🧱 Materiais de Construção',minTier:1},
+ {name:'📦 Eletrônicos Paletizados',minTier:1},
+ {name:'🥤 Bebidas & Suprimentos',minTier:2},
+ {name:'🌾 Grãos & Sacaria Agrícola',minTier:2},
+ {name:'⛽ Combustível & Lubrificantes',minTier:3},
+ {name:'❄️ Alimentos Refrigerados',minTier:4},
+ {name:'🏗️ Carga Containerizada 40ft',minTier:5}
+];
+function hasTruckAccess(){
+ return isPlayerDrivingTruck()||(state.player.onFoot&&isTruckItem(state.equippedCar));
+}
+function activeTruckCfg(){
+ const id=state.player.onFoot?state.equippedCar:state.player.carId;
+ const c=id?CAR_MAP.get(id):null;
+ return c?.kind==='truck'?c:null;
+}
+function pickCargoForTruck(truckCfg,seed=0){
+ const tier=truckCfg?.tier||1;
+ const avail=FREIGHT_CARGOS.filter(c=>c.minTier<=tier);
+ return (avail[Math.abs(Math.floor(seed))%avail.length]||FREIGHT_CARGOS[0]).name;
+}
+function computeFreightPay(distMeters,truckCfg){
+ const km=Math.max(0.25,(Number(distMeters)||0)/1000);
+ const base=Math.round(65+km*175+Math.pow(km,1.15)*42);
+ const mult=truckCfg?.freightMult||1.0;
+ return {km,base,mult,total:Math.round(base*mult)};
+}
+function damageFreightCargo(impactSpeed,cause='Colisão'){
+ const fr=state.freight;
+ if(!fr)return;
+ if(state.now-(fr.lastHitAt??-10)<0.55)return;
+ const spd=Math.max(0,Number(impactSpeed)||0);
+ if(spd<2.2)return;
+ fr.lastHitAt=state.now;
+ const dmg=clamp(Math.round(4+spd*1.15),5,25);
+ fr.integrity=Math.max(10,(fr.integrity??100)-dmg);
+ fr.hits=(fr.hits||0)+1;
+ const curPay=Math.max(25,Math.round(fr.basePay*(fr.integrity/100)));
+ playTone('lose');
+ toast(`💥 ${cause}! Carga avariada em -${dmg}% (Integridade: ${fr.integrity}% · Pagamento: ${formatBRL(curPay)})`,3400);
+}
+function generateFreightOffers(){
+ phoneUi.freightOffers=[];
+ const w=state.world,p=state.player;
+ if(!w?.graph?.length||w.tileFallback)return;
+ const nodes=w.graph.filter(n=>n.edges?.length);
+ if(!nodes.length)return;
+ const bands=[{label:'Curta',min:240,max:620},{label:'Média',min:620,max:1350},{label:'Longa',min:1350,max:3200}];
+ const truck=activeTruckCfg();
+ const used=new Set();
+ bands.forEach((band,bIdx)=>{
+  let best=null;
+  for(let attempt=0;attempt<70;attempt++){
+   const n=nodes[Math.floor(Math.random()*nodes.length)];
+   const straight=hypot(n.x-p.x,n.y-p.y);
+   if(straight<band.min*0.65||straight>band.max*1.15)continue;
+   const rt=computeRoute(p.x,p.y,{x:n.x,y:n.y});
+   if(!rt||rt.length<band.min||rt.length>band.max)continue;
+   const key=Math.round(n.x/60)+','+Math.round(n.y/60);
+   if(used.has(key))continue;
+   const rp=closestRoadPoint(n.x,n.y);
+   const rName=rp?.segment?.road?.name||band.label+' Distância';
+   const targetMid=(band.min+band.max)*0.5;
+   const score=Math.abs(rt.length-targetMid);
+   if(!best||score<best.score)best={score,x:n.x,y:n.y,title:rName,distMeters:rt.length,route:rt,band:band.label};
+  }
+  if(best){
+   used.add(Math.round(best.x/60)+','+Math.round(best.y/60));
+   phoneUi.freightOffers.push({
+    id:'fr_'+bIdx+'_'+Math.round(best.x),
+    cargoName:pickCargoForTruck(truck,bIdx+Math.floor(best.x)),
+    title:best.title,
+    band:best.band,
+    x:best.x,y:best.y,
+    distMeters:best.distMeters,
+    route:best.route,
+    longTrip:false
+   });
+  }
+ });
+}
+function getFreightDestinationCandidates(query=''){
+ const w=state.world,p=state.player;
+ if(!w?.real||w.tileFallback)return [];
+ const base=typeof filterLocalAddressMatches==='function'?filterLocalAddressMatches(query):[];
+ const out=[...base];
+ if(!query&&w.graph?.length&&out.length<8){
+  const nodes=w.graph.filter(n=>n.edges?.length);
+  for(let i=0;i<36&&out.length<10;i++){
+   const n=nodes[Math.floor((i*977+Math.abs(Math.floor(p.x)))%nodes.length)];
+   if(!n)continue;
+   const d=hypot(n.x-p.x,n.y-p.y);
+   if(d<300)continue;
+   if(out.some(o=>hypot(o.x-n.x,o.y-n.y)<180))continue;
+   const rp=closestRoadPoint(n.x,n.y);
+   const st=rp?.segment?.road?.name||'Via Local';
+   out.push({title:st,subtitle:`Ponto rodoviário local (${(d/1000).toFixed(2)} km)`,x:n.x,y:n.y,dist:d,score:90,isCityTrip:false});
+  }
+ }
+ return out.slice(0,10);
+}
+function buildFreightQuoteForDest(item){
+ const w=state.world,p=state.player;
+ if(!item||!w)return null;
+ const straight=hypot(item.x-p.x,item.y-p.y);
+ let distMeters=Math.max(250,straight*1.26),route=null,longTrip=straight>=2400;
+ if(!longTrip){
+  const rt=computeRoute(p.x,p.y,{x:item.x,y:item.y});
+  if(rt?.length){route=rt;distMeters=rt.length;}
+  else longTrip=true;
+ }
+ const sx=111320*Math.cos(w.lat*Math.PI/180),sy=111320;
+ const lat=Number.isFinite(item.lat)?item.lat:(w.lat-item.y/sy);
+ const lon=Number.isFinite(item.lon)?item.lon:(w.lon+item.x/sx);
+ const truck=activeTruckCfg();
+ return {
+  title:item.title||'Destino do Frete',
+  subtitle:item.subtitle||'',
+  x:item.x,y:item.y,lat,lon,
+  distMeters,route,longTrip,
+  cargoName:pickCargoForTruck(truck,Math.round(distMeters))
+ };
+}
+function renderFreightSuggestions(items){
+ const box=$('freightSuggestList');if(!box)return;
+ box.textContent='';
+ if(!items.length){
+  const msg=document.createElement('div');
+  msg.style.cssText='font-size:9px;color:#9dc0b6;padding:3px 2px;';
+  msg.textContent='Digite o nome de uma rua, local ou cidade e toque em CALCULAR.';
+  box.appendChild(msg);return;
+ }
+ items.forEach(item=>{
+  const b=document.createElement('button');b.type='button';b.className='freightSugBtn';
+  const left=document.createElement('span');
+  left.textContent=(item.title||'Destino').slice(0,28);
+  const dKm=((item.dist||hypot(item.x-state.player.x,item.y-state.player.y))/1000).toFixed(2)+' km';
+  const right=document.createElement('b');right.textContent=dKm;
+  b.append(left,right);
+  b.addEventListener('click',()=>{
+   phoneUi.freightQuote=buildFreightQuoteForDest(item);
+   renderPhoneFreight();
+  });
+  box.appendChild(b);
+ });
+}
+async function searchFreightDestination(){
+ const w=state.world;
+ if(!w?.real||w.tileFallback){toast('Carregue uma cidade real primeiro.');return;}
+ const q=($('freightDestInput')?.value||'').trim();
+ if(!q){
+  const cands=getFreightDestinationCandidates('');
+  renderFreightSuggestions(cands);
+  if(cands[0]){phoneUi.freightQuote=buildFreightQuoteForDest(cands[0]);renderPhoneFreight();}
+  return;
+ }
+ const local=getFreightDestinationCandidates(q);
+ if(local.length&&local[0].score>=150){
+  renderFreightSuggestions(local);
+  phoneUi.freightQuote=buildFreightQuoteForDest(local[0]);
+  renderPhoneFreight();
+  return;
+ }
+ if(phoneUi.freightSearching)return;
+ phoneUi.freightSearching=true;
+ const btn=$('freightCalcBtn');if(btn){btn.disabled=true;btn.textContent='...';}
+ try{
+  const sx=111320*Math.cos(w.lat*Math.PI/180),sy=111320;
+  const found=[...local];
+  const urls=[
+   {url:'https://geocoding-api.open-meteo.com/v1/search?'+new URLSearchParams({name:q,count:'6',language:'pt',format:'json'}),parse:openMeteoPlaces,sub:'Cidade / Município'},
+   {url:'https://photon.komoot.io/api/?'+new URLSearchParams({q:`${q}, Brasil`,lat:String(w.lat),lon:String(w.lon),limit:'6',lang:'en'}),parse:photonPlaces,sub:'Endereço / Local'},
+   {url:'https://nominatim.openstreetmap.org/search?'+new URLSearchParams({q,countrycodes:'br',format:'jsonv2',limit:'6','accept-language':'pt-BR'}),parse:nominatimPlaces,sub:'Mapa Brasil'}
+  ];
+  for(const u of urls){
+   try{
+    const data=await queryGeocoding(u.url,6000);
+    for(const pl of u.parse(data)){
+     if(!validPlace(pl))continue;
+     const wx=(pl.lon-w.lon)*sx,wy=(w.lat-pl.lat)*sy,dist=hypot(wx-state.player.x,wy-state.player.y);
+     if(!found.some(f=>hypot(f.x-wx,f.y-wy)<80))found.push({title:pl.title,subtitle:pl.subtitle||u.sub,x:wx,y:wy,lat:pl.lat,lon:pl.lon,dist,score:110,isCityTrip:dist>=2400});
+    }
+    if(found.length>=local.length+3)break;
+   }catch(e){}
+  }
+  if(found.length){
+   renderFreightSuggestions(found.slice(0,8));
+   phoneUi.freightQuote=buildFreightQuoteForDest(found[0]);
+   renderPhoneFreight();
+  }else{
+   toast('Destino não encontrado. Escolha uma sugestão ou digite outra cidade.');
+  }
+ }finally{
+  phoneUi.freightSearching=false;
+  if(btn){btn.disabled=false;btn.textContent='CALCULAR';}
+ }
+}
+function acceptFreightPayload(payload){
+ const w=state.world,p=state.player;
+ if(!payload||!w||state.loading)return;
+ if(!hasTruckAccess()){toast('🚚 Você precisa de um CAMINHÃO ou CARRETA para transportar fretes!');return;}
+ const truck=activeTruckCfg();
+ if(p.onFoot&&isTruckItem(state.equippedCar)){
+  if(state.parkedCars)state.parkedCars=state.parkedCars.filter(c=>c.id!==p.vehicleId);
+  const rp=closestRoadPoint(p.x,p.y);
+  if(rp){p.x=rp.x;p.y=rp.y;p.angle=Math.atan2(rp.segment.b.y-rp.segment.a.y,rp.segment.b.x-rp.segment.a.x);p.trailerAngle=p.angle;}
+  p.carId=state.equippedCar;p.vkind=vehicleKindForItem(truck);p.onFoot=false;p.speed=0;p.vx=p.vy=0;updateGameplayHUD();
+ }
+ if(state.race){state.race=null;$('raceLights')?.classList.add('hidden');}
+ state.ifuud=null;state.mission=null;longRouteController?.abort();
+ const quote=computeFreightPay(payload.distMeters,truck);
+ state.freight={
+  cargoName:payload.cargoName||pickCargoForTruck(truck),
+  destName:payload.title||'Destino do Frete',
+  distMeters:payload.distMeters,
+  basePay:quote.total,
+  truckName:truck?.name||'Caminhão',
+  truckMult:quote.mult,
+  integrity:100,
+  hits:0,
+  lastHitAt:-10
+ };
+ if(payload.longTrip){
+  state.navGoal={x:payload.x,y:payload.y,targetX:payload.x,targetY:payload.y,lat:payload.lat,lon:payload.lon,label:payload.title,roadName:payload.title,longTrip:true,isFreight:true};
+  state.route=computeLongDistanceHybridRoute(p.x,p.y,state.navGoal);
+  ensureLongTripCorridorRoads(w,state.route.fullOsrmPath);
+  void fetchLongDistanceOsrmRoute(state.navGoal);
+ }else{
+  state.navGoal={x:payload.x,y:payload.y,label:payload.title,isFreight:true};
+  state.route=computeRoute(p.x,p.y,state.navGoal)||payload.route;
+ }
+ state.routeTimer=1.8;
+ $('navType').textContent=`🚚 ${state.freight.cargoName} · ${formatBRL(state.freight.basePay)}`.slice(0,36);
+ $('missionCountdown').classList.remove('hidden');
+ $('navigation').classList.remove('hidden');
+ hidePhone();
+ playTone('cp');
+ toast(`🚚 Carga carregada (${state.freight.cargoName})! Evite bater para ganhar ${formatBRL(state.freight.basePay)}!`,4600);
+}
+function renderPhoneFreight(){
+ updateMoneyHUD(true);
+ const banner=$('freightTruckBanner'),sugBox=$('freightSuggestList'),qCard=$('freightQuoteCard'),list=$('freightOffersList');
+ if(!banner||!list)return;
+ const hasAnyTruck=state.ownedCars.some(id=>isTruckItem(id));
+ const truckReady=hasTruckAccess(),truck=activeTruckCfg();
+ banner.className='ifuudAlert '+(truckReady?'ready':'warn');
+ banner.innerHTML='';
+ if(truckReady){
+  banner.textContent=`${truck.articulated?'🚛':'🚚'} ${truck.name} · Bônus Frete: ${truck.freightMult.toFixed(2)}×${truck.articulated?' (Carreta Articulada)':''}. Quanto mais longe e menos batidas, maior o lucro!`;
+ }else if(hasAnyTruck){
+  const msg=document.createElement('div');
+  msg.textContent='⚠️ Selecione um CAMINHÃO na Garagem para aceitar fretes.';
+  const row=document.createElement('div');row.className='ifuudQuickRow';
+  const gBtn=document.createElement('button');gBtn.className='amber';gBtn.textContent='🚛 Trocar na Garagem';
+  gBtn.onclick=()=>openPhoneApp('garage');
+  row.appendChild(gBtn);banner.append(msg,row);
+ }else{
+  const msg=document.createElement('div');
+  msg.textContent='🚚 Fretes exigem um caminhão ou carreta! Veja a calculadora abaixo ou compre um na Loja (a partir de R$ 450).';
+  const row=document.createElement('div');row.className='ifuudQuickRow';
+  const sBtn=document.createElement('button');sBtn.className='amber';sBtn.textContent='🛒 Loja de Caminhões';
+  sBtn.onclick=()=>{phoneUi.shopCat='truck';openPhoneApp('shop');};
+  row.appendChild(sBtn);banner.append(msg,row);
+ }
+ renderFreightSuggestions(getFreightDestinationCandidates(($('freightDestInput')?.value||'').trim()));
+ if(qCard){
+  const q=phoneUi.freightQuote;
+  if(q){
+   const previewTruck=truck||{name:'Picape Básica (Exemplo)',freightMult:1.15};
+   const calc=computeFreightPay(q.distMeters,previewTruck);
+   const topCalc=computeFreightPay(q.distMeters,{freightMult:4.15});
+   qCard.classList.remove('hidden');
+   qCard.innerHTML=`<div class="ifuudOrderTop"><span>📍 ${q.title.slice(0,26)}</span><span class="ifuudOrderPay">${formatBRL(calc.total)}</span></div>`+
+    `<div class="freightQuoteGrid"><span>Distância<b>${calc.km.toFixed(2)} km</b></span><span>Seu Caminhão<b>${previewTruck.freightMult.toFixed(2)}× (${truckReady?'Ativo':'Simulação'})</b></span></div>`+
+    `<div class="ifuudOrderMeta">📦 Carga: ${q.cargoName} · Carreta Top (4.15×) pagaria: <b style="color:#fde68a">${formatBRL(topCalc.total)}</b><br>⚠️ Carga sai a 100%; batidas descontam do valor!</div>`;
+   const goBtn=document.createElement('button');goBtn.type='button';goBtn.className='ifuudAcceptBtn amber';
+   goBtn.textContent=truckReady?`🚚 INICIAR FRETE (+${formatBRL(calc.total)})`:'🔒 COMPRE/EQUIPE UM CAMINHÃO';
+   goBtn.disabled=!truckReady||Boolean(state.freight);
+   goBtn.onclick=()=>acceptFreightPayload(q);
+   qCard.appendChild(goBtn);
+  }else qCard.classList.add('hidden');
+ }
+ list.textContent='';
+ if(state.freight){
+  const cur=document.createElement('div');cur.className='ifuudOrderCard freightCard';
+  const curPay=Math.max(25,Math.round(state.freight.basePay*(state.freight.integrity/100)));
+  cur.innerHTML=`<div class="ifuudOrderTop"><span>${state.freight.cargoName}</span><span class="ifuudOrderPay">${formatBRL(curPay)}</span></div>`+
+   `<div class="ifuudOrderMeta">📍 Destino: ${state.freight.destName}<br>🛡️ Integridade: <b>${state.freight.integrity}%</b> (${state.freight.hits} batida${state.freight.hits===1?'':'s'})</div>`;
+  const cBtn=document.createElement('button');cBtn.className='ifuudAcceptBtn';cBtn.textContent='✕ CANCELAR FRETE ATUAL';
+  cBtn.onclick=()=>{clearDestination();renderPhoneFreight();};
+  cur.appendChild(cBtn);list.appendChild(cur);return;
+ }
+ const offers=phoneUi.freightOffers||[];
+ if(!offers.length){
+  const emp=document.createElement('div');emp.className='ifuudOrderCard freightCard';
+  emp.innerHTML='<div class="ifuudOrderMeta">Carregue uma cidade real com ruas para calcular e aceitar fretes.</div>';
+  list.appendChild(emp);return;
+ }
+ offers.forEach((of,idx)=>{
+  const previewTruck=truck||{freightMult:1.15};
+  const payObj=computeFreightPay(of.distMeters,previewTruck);
+  const card=document.createElement('div');card.className='ifuudOrderCard freightCard';
+  card.innerHTML=`<div class="ifuudOrderTop"><span>${of.cargoName}</span><span class="ifuudOrderPay">+${formatBRL(payObj.total)}</span></div>`+
+   `<div class="ifuudOrderMeta">📍 <b>${of.band}:</b> ${of.title} · ${payObj.km.toFixed(2)} km · ${previewTruck.freightMult.toFixed(2)}×</div>`;
+  const btn=document.createElement('button');btn.type='button';btn.className='ifuudAcceptBtn amber';btn.dataset.freightIdx=String(idx);
+  btn.textContent=truckReady?'🚚 ACEITAR FRETE':'🔒 SOMENTE DE CAMINHÃO';
+  btn.disabled=!truckReady;
+  card.appendChild(btn);list.appendChild(card);
+ });
 }
 function renderPhoneBank(){
  updateMoneyHUD(true);
@@ -1462,6 +2118,76 @@ function updateRaceLightsUI(countdown,greenFlash=0){
  txt.textContent=countdown>1.5?`PARE · ${Math.ceil(countdown)}`:countdown>0?`PREPARE · ${Math.ceil(countdown)}`:'VERDE! VAI!!';
  txt.style.color=countdown>1.5?'#fca5a5':countdown>0?'#fde047':'#86efac';
 }
+function buildRaceGridOnStreet(fullPath){
+ const pts=fullPath||[],cum=[0];
+ for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y));
+ const total=cum[cum.length-1]||0;
+ const sampleAt=(dist)=>{
+  const s=clamp(dist,0,total);
+  let k=0;while(k<cum.length-2&&cum[k+1]<s)k++;
+  const a=pts[k],b=pts[Math.min(pts.length-1,k+1)]||a;
+  const segLen=Math.max(0.001,hypot(b.x-a.x,b.y-a.y));
+  const u=clamp((s-cum[k])/segLen,0,1);
+  const x=lerp(a.x,b.x,u),y=lerp(a.y,b.y,u),ang=Math.atan2(b.y-a.y,b.x-a.x);
+  const rd=getRoad(x,y,ang,false);
+  const onBridge=Boolean(rd&&rd.off<=0.4&&rd.edge?.bridge);
+  const bridgeElev=onBridge?(rd.elev||0):0;
+  const w=(rd?.edge?.width)||8.4;
+  return {x,y,ang,segIdx:k,onBridge,bridgeElev,width:w,roadHalf:Math.max(0,w*0.32-1.25)};
+ };
+ const isSafeSpot=(rx,ry,ang,onBridge)=>{
+  if(getBuildingCollision&&getBuildingCollision(rx,ry,1.85))return false;
+  if(typeof getPierCollision==='function'&&getPierCollision(rx,ry,1.5))return false;
+  if(state.world?._pointOverWater?.(rx,ry))return false;
+  const rd=getRoad(rx,ry,ang,onBridge);
+  // rd.off <= 0 significa estritamente dentro da largura asfaltada da rua!
+  return Boolean(rd&&rd.off<=0.2);
+ };
+ const tryPole=(poleDist)=>{
+  const head=sampleAt(poleDist);
+  if(!isSafeSpot(head.x,head.y,head.ang,head.onBridge))return null;
+  const wide=head.roadHalf>=1.35;
+  const cfg=wide
+   ?[{bk:0,sgn:0.75},{bk:-4.8,sgn:-0.75},{bk:-4.8,sgn:0.75},{bk:-9.6,sgn:-0.75},{bk:-9.6,sgn:0.75},{bk:-14.4,sgn:0}]
+   :[{bk:0,sgn:0.22},{bk:-5.0,sgn:-0.22},{bk:-10.0,sgn:0.22},{bk:-15.0,sgn:-0.22},{bk:-20.0,sgn:0.22},{bk:-25.0,sgn:0}];
+  const out=[];
+  for(const sl of cfg){
+   const base=sampleAt(poleDist+sl.bk);
+   const maxLat=wide?clamp(base.roadHalf,0.9,1.8):0.4;
+   let placed=null;
+   for(const lat of [sl.sgn*maxLat,0]){
+    const rx=base.x-Math.sin(base.ang)*lat,ry=base.y+Math.cos(base.ang)*lat;
+    if(isSafeSpot(rx,ry,base.ang,base.onBridge)){
+     placed={x:rx,y:ry,angle:base.ang,segIdx:base.segIdx,lat,onBridge:base.onBridge,bridgeElev:base.bridgeElev};
+     break;
+    }
+   }
+   if(!placed)return null;
+   out.push(placed);
+  }
+  return out;
+ };
+ for(let d=Math.min(28,Math.max(15,total*0.12));d<=Math.min(180,Math.max(28,total-12));d+=4){
+  const g=tryPole(d);
+  if(g)return g;
+ }
+ // Fallback garantido no centro de uma rua real próxima sem colisão com casas
+ const refPt=pts[Math.min(pts.length-1,1)]||pts[0]||{x:state.player.x,y:state.player.y};
+ const rp=closestRoadPoint(refPt.x,refPt.y);
+ if(rp?.segment){
+  const seg=rp.segment,dx=seg.b.x-seg.a.x,dy=seg.b.y-seg.a.y,sLen=Math.max(1,hypot(dx,dy));
+  const ux=dx/sLen,uy=dy/sLen,ang=Math.atan2(dy,dx);
+  return [0,-4.6,-9.2,-13.8,-18.4,-23.0].map(bk=>{
+   const t=clamp(rp.t+bk/sLen,0.06,0.94);
+   return {x:lerp(seg.a.x,seg.b.x,t),y:lerp(seg.a.y,seg.b.y,t),angle:ang,segIdx:0,lat:0,onBridge:Boolean(seg.bridge),bridgeElev:seg.bridge?(rp.elev||0):0};
+  });
+ }
+ const d=Math.min(24,Math.max(0,total*0.15));
+ return [0,-5,-10,-15,-20,-25].map(bk=>{
+  const b=sampleAt(d+bk);
+  return {x:b.x,y:b.y,angle:b.ang,segIdx:b.segIdx,lat:0,onBridge:b.onBridge,bridgeElev:b.bridgeElev};
+ });
+}
 function startRaceFromPhone(){
  const d=phoneUi.draft,w=state.world,p=state.player;
  if(!d||!w||state.loading)return;
@@ -1472,18 +2198,16 @@ function startRaceFromPhone(){
   if(state.parkedCars)state.parkedCars=state.parkedCars.filter(c=>c.id!==p.vehicleId);
   const rp=closestRoadPoint(p.x,p.y);
   if(rp){p.x=rp.x;p.y=rp.y;p.angle=Math.atan2(rp.segment.b.y-rp.segment.a.y,rp.segment.b.x-rp.segment.a.x);p.onBridge=Boolean(rp.segment.bridge);p.bridgeElev=rp.segment.bridge?(rp.elev||0):0;}
-  p.carId=state.equippedCar||'c_0_0';p.vkind='sport';
+  p.carId=state.equippedCar||'c_0_0';p.vkind=vehicleKindForItem(CAR_MAP.get(p.carId));p.trailerAngle=p.angle;
   p.onFoot=false;p.speed=0;p.vx=p.vy=0;p.nitro=100;rebuildTrafficSpatial(true);updateGameplayHUD();
  }
  if(bet>0)addMoney(-bet,`Aposta ${d.cfg.label}`,'bet');
- state.mission=null;longRouteController?.abort();
+ state.mission=null;state.ifuud=null;state.freight=null;longRouteController?.abort();
  const diff=computeRaceDiff(d.mode,bet);
  const prize=bet>0?Math.round(bet*d.cfg.mult):80;
  const first=d.checkpoints[0];
- const startAng=d.legs[0].path.length?Math.atan2(d.legs[0].path[0].y-p.y,d.legs[0].path[0].x-p.x):p.angle;
- p.angle=startAng;p.speed=0;p.vx=0;p.vy=0;
 
- // Caminho completo + 5 carros rivais em grid de largada
+ // Caminho completo + 5 carros rivais alinhados na faixa da rua (sem invadir casas)
  const fullPath=[],cpEndIdx=[];
  for(let li=0;li<d.legs.length;li++){
   for(const pt of d.legs[li].path){
@@ -1491,21 +2215,25 @@ function startRaceFromPhone(){
   }
   cpEndIdx.push(Math.max(0,fullPath.length-1));
  }
- const poolMin=Math.floor(diff*44),poolMax=Math.min(CAR_CATALOG.length-1,poolMin+15);
+ const grid=buildRaceGridOnStreet(fullPath);
+ const pole=grid[0];
+ p.x=pole.x;p.y=pole.y;p.angle=pole.angle;p.trailerAngle=pole.angle;p.onBridge=pole.onBridge;p.bridgeElev=pole.bridgeElev;
+ p.speed=0;p.vx=0;p.vy=0;
+
+ const pool=RACE_CAR_POOL.length?RACE_CAR_POOL:CAR_CATALOG;
+ const poolMin=Math.floor(diff*Math.max(0,pool.length-16)),poolMax=Math.min(pool.length-1,poolMin+15);
  const names=['Léo','Mia','Bia','Rafa','Sombra'];
- const ux=Math.cos(startAng),uy=Math.sin(startAng),nx=-uy,ny=ux;
- const slots=[[-4.2,-2.1],[-4.2,2.1],[-9.2,-1.5],[-9.2,1.5],[-14.2,0]];
  const rivals=[];
  for(let i=0;i<5;i++){
-  const pickIdx=clamp(poolMin+Math.floor(Math.random()*(poolMax-poolMin+1)),0,CAR_CATALOG.length-1);
-  const rc=CAR_CATALOG[pickIdx];
-  const [bk,sd]=slots[i];
-  const rx=p.x+ux*bk+nx*sd,ry=p.y+uy*bk+ny*sd;
+  const pickIdx=clamp(poolMin+Math.floor(Math.random()*(poolMax-poolMin+1)),0,pool.length-1);
+  const rc=pool[pickIdx];
+  const slot=grid[i+1];
   const maxSpd=lerp(20.5,37.0,clamp(diff+(i-2)*0.055,0.06,1));
   rivals.push({
    name:names[i],carId:rc.id,vkind:'sport',color:carPalette[(i*3+2)%carPalette.length],
-   x:rx,y:ry,angle:startAng,speed:0,maxSpeed:maxSpd,accel:lerp(9.8,17.2,diff),
-   pathIdx:0,cpIdx:0,finished:false,braking:false,lateralBias:(i-2)*0.68,onBridge:p.onBridge,bridgeElev:p.bridgeElev||0
+   x:slot.x,y:slot.y,angle:slot.angle,speed:0,maxSpeed:maxSpd,accel:lerp(9.8,17.2,diff),
+   pathIdx:Math.min(Math.max(0,fullPath.length-1),slot.segIdx+1),cpIdx:0,finished:false,braking:false,
+   lateralBias:clamp((slot.lat||0)*0.45,-0.9,0.9),onBridge:slot.onBridge,bridgeElev:slot.bridgeElev||0
   });
  }
 
@@ -1516,7 +2244,7 @@ function startRaceFromPhone(){
   rivals,finishedRivals:0
  };
  state.navGoal={x:first.x,y:first.y,label:`PONTO 1/${d.checkpoints.length}`,isRace:true};
- state.route={path:d.legs[0].path.slice(),length:d.legs[0].length,isRace:true};
+ state.route={path:pruneRoutePath(p.x,p.y,d.legs[0].path.slice(),state.navGoal),length:d.legs[0].length,isRace:true};
  state.routeTimer=1.8;
  $('navType').textContent=`1º/6 · PT 1/${d.checkpoints.length} · ${formatBRL(prize)}`;
  $('missionCountdown').classList.remove('hidden');
@@ -8571,31 +9299,122 @@ function drawVehicle25D(x,y,angle,color,opts={},context=ctx){
  });
 
  context.save();
- // 1. Sombra de contato no asfalto / tabuleiro da ponte
- context.save();
- context.translate(lx+SHADOW_X*0.65,ly+SHADOW_Y*0.65);context.rotate(angle);
- context.fillStyle='#0c151ccc';
- context.fillRect(-hL-0.18,-hW-0.12,sp.L+0.42,sp.W+0.34);
- context.restore();
-
  const carSprite=opts.spriteId?CAR_MAP.get(opts.spriteId):null;
- if(carSprite&&ensureCarAtlas().ready){
+ const isMoto=carSprite?.kind==='moto',isTruck=carSprite?.kind==='truck';
+ const vehAtlas=carSprite?ensureVehicleAtlas(isMoto?'moto':isTruck?'truck':'car'):null;
+
+ if(carSprite&&isTruck&&carSprite.articulated&&vehAtlas?.ready&&Number.isFinite(opts.trailerAngle)){
+  const tr=carSprite.tr,wpp=carSprite.len/tr.sh;
+  const cabMidY=tr.cabEndY*0.5,trH=tr.sh-tr.trStartY,trMidY=tr.trStartY+trH*0.5;
+  const dHitchBack=(tr.hitchY-cabMidY)*wpp,dTrBack=(trMidY-tr.hitchY)*wpp;
+  const trAng=opts.trailerAngle;
+  const hx=lx-Math.cos(angle)*dHitchBack,hy=ly-Math.sin(angle)*dHitchBack;
+  const tx=hx-Math.cos(trAng)*dTrBack,ty=hy-Math.sin(trAng)*dTrBack;
+  const cabW=tr.sw*wpp,cabH=tr.cabEndY*wpp,trW=tr.sw*wpp,trLen=trH*wpp;
+  const prevSmooth=context.imageSmoothingEnabled;
+
+  // 1a. Sombras separadas da carreta e do cavalo
+  context.fillStyle='#0c151ccc';
   context.save();
-  context.translate(lx,ly);
-  context.rotate(angle-Math.PI*0.5);
-  const drawH=carSprite.len*(112/106),drawW=drawH*(80/112);
+  context.translate(tx+SHADOW_X*0.75,ty+SHADOW_Y*0.75);context.rotate(trAng+Math.PI*0.5);
+  context.fillRect(-trW*0.48-0.14,-trLen*0.5-0.14,trW*0.96+0.28,trLen+0.28);
+  context.restore();
+  context.save();
+  context.translate(lx+SHADOW_X*0.65,ly+SHADOW_Y*0.65);context.rotate(angle+Math.PI*0.5);
+  context.fillRect(-cabW*0.48-0.12,-cabH*0.5-0.12,cabW*0.96+0.24,cabH+0.24);
+  context.restore();
+
+  // 1b. Quinta roda e chassi traseiro conectando cavalo e pino-rei
+  context.save();
+  context.translate(hx,hy);context.rotate(angle+Math.PI*0.5);
+  context.fillStyle='#1e242c';context.fillRect(-cabW*0.30,-0.85,cabW*0.60,1.45);
+  context.fillStyle='#475569';context.beginPath();context.arc(0,0,0.42,0,TAU);context.fill();
+  context.restore();
+
+  // 1c. Carreta independente (com luzes de freio/ré na traseira da carreta)
+  context.save();
+  context.translate(tx,ty);context.rotate(trAng+Math.PI*0.5);
   if(braking){
    context.fillStyle='#ff3b4e';
-   context.fillRect(-drawW*0.33,-drawH*0.46,drawW*0.18,0.34);
-   context.fillRect(drawW*0.15,-drawH*0.46,drawW*0.18,0.34);
+   context.fillRect(-trW*0.36,trLen*0.47,trW*0.18,0.34);
+   context.fillRect(trW*0.18,trLen*0.47,trW*0.18,0.34);
   }else if(reversing){
    context.fillStyle='#f8fafc';
-   context.fillRect(-drawW*0.28,-drawH*0.46,drawW*0.15,0.3);
-   context.fillRect(drawW*0.13,-drawH*0.46,drawW*0.15,0.3);
+   context.fillRect(-trW*0.32,trLen*0.47,trW*0.15,0.3);
+   context.fillRect(trW*0.17,trLen*0.47,trW*0.15,0.3);
+  }
+  context.imageSmoothingEnabled=false;
+  context.drawImage(vehAtlas.img,tr.sx,tr.sy+tr.trStartY,tr.sw,trH,-trW*0.5,-trLen*0.5,trW,trLen);
+  context.imageSmoothingEnabled=prevSmooth;
+  context.restore();
+
+  // 1d. Cabine / cavalo mecânico por cima da quinta roda
+  context.save();
+  context.translate(lx,ly);context.rotate(angle+Math.PI*0.5);
+  context.imageSmoothingEnabled=false;
+  context.drawImage(vehAtlas.img,tr.sx,tr.sy,tr.sw,tr.cabEndY,-cabW*0.5,-cabH*0.5,cabW,cabH);
+  context.imageSmoothingEnabled=prevSmooth;
+  context.restore();
+
+  context.restore();
+  return;
+ }
+
+ const isSpriteVeh=Boolean(carSprite&&vehAtlas?.ready);
+ const tr=carSprite?.tr;
+ const drawH=isSpriteVeh?(isTruck?carSprite.len:isMoto?Math.max(4.05,carSprite.len*(112/106)*1.58):carSprite.len*(112/106)):sp.L;
+ const drawW=isSpriteVeh?(isTruck?(drawH*(tr.sw/tr.sh)):(drawH*(80/112))):sp.W;
+
+ // 1. Sombra de contato no asfalto / tabuleiro da ponte
+ context.save();
+ if(isMoto){
+  // Sombra oval estreita e translúcida deslocada para baixo/direita para nunca encobrir ou "quadricular" a moto
+  context.translate(lx+SHADOW_X*0.42,ly+SHADOW_Y*0.42);context.rotate(angle);
+  context.fillStyle='#0c151c48';
+  context.beginPath();context.ellipse(0,0,drawH*0.36,0.28,0,0,TAU);context.fill();
+ }else{
+  context.translate(lx+SHADOW_X*0.65,ly+SHADOW_Y*0.65);context.rotate(angle);
+  context.fillStyle='#0c151ccc';
+  context.fillRect(-hL-0.18,-hW-0.12,sp.L+0.42,sp.W+0.34);
+ }
+ context.restore();
+
+ if(isSpriteVeh){
+  context.save();
+  context.translate(lx,ly);
+  context.rotate((isMoto||isTruck)?angle+Math.PI*0.5:angle-Math.PI*0.5);
+  if(isMoto){
+   // Farol dianteiro sempre aceso (obrigatório em motos) ajuda a destacar a moto no asfalto escuro
+   context.fillStyle='#fef08a38';
+   context.beginPath();context.arc(0,-drawH*0.44,0.48,0,TAU);context.fill();
+  }
+  if(braking){
+   context.fillStyle='#ff3b4e';
+   if(isMoto){context.fillRect(-drawW*0.07,drawH*0.39,drawW*0.14,0.28);}
+   else if(isTruck){
+    context.fillRect(-drawW*0.33,drawH*0.46,drawW*0.18,0.34);
+    context.fillRect(drawW*0.15,drawH*0.46,drawW*0.18,0.34);
+   }else{
+    context.fillRect(-drawW*0.33,-drawH*0.46,drawW*0.18,0.34);
+    context.fillRect(drawW*0.15,-drawH*0.46,drawW*0.18,0.34);
+   }
+  }else if(reversing&&!isMoto){
+   context.fillStyle='#f8fafc';
+   const ry=isTruck?drawH*0.46:-drawH*0.46;
+   context.fillRect(-drawW*0.28,ry,drawW*0.15,0.3);
+   context.fillRect(drawW*0.13,ry,drawW*0.15,0.3);
   }
   const prevSmooth=context.imageSmoothingEnabled;
-  context.imageSmoothingEnabled=false;
-  context.drawImage(CAR_ATLAS.img,carSprite.c*80,carSprite.r*112,80,112,-drawW*0.5,-drawH*0.5,drawW,drawH);
+  context.imageSmoothingEnabled=isMoto;
+  if(isTruck&&tr){
+   context.drawImage(vehAtlas.img,tr.sx,tr.sy,tr.sw,tr.sh,-drawW*0.5,-drawH*0.5,drawW,drawH);
+  }else{
+   context.drawImage(vehAtlas.img,carSprite.c*80,carSprite.r*112,80,112,-drawW*0.5,-drawH*0.5,drawW,drawH);
+  }
+  if(isMoto){
+   context.fillStyle='#fef9c3';
+   context.beginPath();context.arc(0,-drawH*0.40,0.20,0,TAU);context.fill();
+  }
   context.imageSmoothingEnabled=prevSmooth;
   context.restore();
   context.restore();
@@ -9325,6 +10144,7 @@ function renderMini(){
 function updateJourney(dt,oldX,oldY,speed){const p=state.player,w=state.world;
  p.odometer+=hypot(p.x-oldX,p.y-oldY);
  if(state.mission){state.mission.remaining=Math.max(0,state.mission.remaining-dt);if(state.mission.remaining===0&&!state.mission.lateNotified){state.mission.lateNotified=true;toast('O prazo acabou! Faça a entrega para receber a pontuação básica.',4700)}}
+ if(state.ifuud){state.ifuud.remaining=Math.max(0,state.ifuud.remaining-dt);if(state.ifuud.remaining===0&&!state.ifuud.lateNotified){state.ifuud.lateNotified=true;toast('⏰ Pedido iFuud atrasou! Entregue para ganhar o valor base.',4200)}}
  if(state.race){
   const race=state.race;
   if(race.countdown>0){
@@ -9370,8 +10190,42 @@ function updateJourney(dt,oldX,oldY,speed){const p=state.player,w=state.world;
  }
  if(state.navGoal){
   const d=hypot(p.x-state.navGoal.x,p.y-state.navGoal.y);
-  const arriveRadius=state.navGoal.longTrip?22:11;
-  if(!state.race&&d<arriveRadius){
+  const arriveRadius=state.navGoal.longTrip?22:state.ifuud?13:11;
+  if(!state.race&&state.ifuud&&d<arriveRadius){
+   const ifd=state.ifuud;
+   if(!isPlayerRidingMoto()){
+    if(state.now-(ifd._warnAt||0)>3.5){ifd._warnAt=state.now;toast('🛵 Montado em uma MOTO é obrigatório para retirar ou entregar no iFuud!',3200);}
+   }else if(ifd.stage==='pickup'){
+    ifd.stage='deliver';
+    state.navGoal={x:ifd.house.x,y:ifd.house.y,label:ifd.house.name,isIfuud:true};
+    state.route=computeRoute(p.x,p.y,state.navGoal)||ifd.house.route;
+    state.routeTimer=1.6;
+    $('navType').textContent=`🏠 CASA: ${ifd.house.name}`.toUpperCase().slice(0,36);
+    playTone('cp');
+    toast(`🥡 ${ifd.dish} retirado! Leve agora até ${ifd.house.name}!`,4000);
+   }else{
+    const tip=ifd.remaining>0?Math.round(ifd.pay*0.25):0,totalPay=ifd.pay+tip,pts=totalPay*4;
+    p.score+=pts;
+    addMoney(totalPay,`iFuud: ${ifd.dish.slice(0,26)}`,'ifuud');
+    playTone('cash');
+    toast(`🛵 Entrega iFuud concluída! +${formatBRL(totalPay)}${tip>0?` (c/ gorjeta ${formatBRL(tip)})`:''} · +${pts} pts`,4500);
+    state.ifuud=null;clearDestination();persist();
+   }
+  }else if(!state.race&&state.freight&&d<arriveRadius){
+   const fr=state.freight;
+   if(!isPlayerDrivingTruck()){
+    if(state.now-(fr._warnAt||0)>3.5){fr._warnAt=state.now;toast('🚚 Você precisa estar dirigindo um CAMINHÃO ou CARRETA para entregar o frete!',3400);}
+   }else{
+    const integ=clamp(Math.round(fr.integrity??100),10,100);
+    const finalPay=Math.max(25,Math.round(fr.basePay*(integ/100)));
+    const pts=finalPay*3;
+    p.score+=pts;
+    addMoney(finalPay,`Frete: ${fr.cargoName.slice(0,26)} (${integ}%)`,'freight');
+    playTone('cash');
+    toast(`🚚 Frete entregue com ${integ}% de integridade! +${formatBRL(finalPay)} · +${pts} pts`,4800);
+    state.freight=null;clearDestination();persist();
+   }
+  }else if(!state.race&&!state.ifuud&&!state.freight&&d<arriveRadius){
    const mission=state.mission;const earned=mission?(mission.remaining>0?1000+Math.round(mission.remaining*2):300):(state.navGoal.longTrip?1500:250);
    const cashGain=mission?Math.max(40,Math.round(earned*0.25)):(state.navGoal.longTrip?150:35);
    p.score+=earned;
@@ -9479,6 +10333,8 @@ function updateHUD(){
   const dist=hypot(p.x-state.navGoal.x,p.y-state.navGoal.y);
   $('navDistance').textContent=dist>1000?(dist/1000).toFixed(1)+' km':Math.round(dist)+' m';
   if(state.mission){const sec=Math.ceil(state.mission.remaining);$('missionCountdown').textContent=sec>0?`TEMPO: ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`:'PRAZO ENCERRADO';$('missionCountdown').style.color=sec<24?'#ffb0a0':'#b6e0ae'}
+  else if(state.ifuud){const sec=Math.ceil(state.ifuud.remaining);$('missionCountdown').textContent=sec>0?`iFUUD: ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} · ${state.ifuud.stage==='pickup'?'COLETA':'CASA'}`:'iFUUD ATRASADO';$('missionCountdown').style.color=sec<20?'#ffb0a0':'#fda4af'}
+  else if(state.freight){const integ=clamp(Math.round(state.freight.integrity??100),10,100),curPay=Math.max(25,Math.round(state.freight.basePay*(integ/100)));$('navType').textContent=`🚚 ${state.freight.destName}`.toUpperCase().slice(0,34);$('missionCountdown').textContent=`CARGA ${integ}% · ${formatBRL(curPay)} · ${state.freight.hits||0} bat.`;$('missionCountdown').style.color=integ<45?'#f87171':integ<75?'#fde047':'#86efac';}
   else if(state.race){if(state.race.countdown>0){$('missionCountdown').textContent=`LARGADA: ${Math.ceil(state.race.countdown)}s · 6 CARROS`;$('missionCountdown').style.color='#fca5a5';}else{const sec=Math.max(0,Math.ceil(state.race.remaining)),pl=computeRacePlace();$('missionCountdown').textContent=`TEMPO: ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} · ${pl}º/${(state.race.rivals?.length||5)+1} · PT ${state.race.idx+1}/${state.race.checkpoints.length}`;$('missionCountdown').style.color=sec<15?'#ffb0a0':'#fde047';}}
   let targetPt=state.navGoal;
   const rpts=state.route?.path;
@@ -9526,7 +10382,7 @@ function renderFrame(timestamp){
 }
 function setupAudio(){if(state.sound){if(!state.audio){const AC=window.AudioContext||window.webkitAudioContext;if(!AC){toast('Áudio indisponível neste navegador');state.sound=false;return}const audio=new AC,osc=audio.createOscillator(),gain=audio.createGain();osc.type='sawtooth';osc.frequency.value=60;gain.gain.value=0.01;osc.connect(gain);gain.connect(audio.destination);osc.start();state.audio=audio;state.engine={osc,gain}}state.audio.resume();$('audioButton').textContent='♪';$('audioButton').style.color='#e4d991'}else{if(state.audio)state.audio.suspend();$('audioButton').textContent='♫';$('audioButton').style.color=''}}
 function rotateWeather(){const a=['sun','rain','night'];state.mode=a[(a.indexOf(state.mode)+1)%a.length];$('weatherButton').textContent={sun:'☀',rain:'☂',night:'☾'}[state.mode];toast({sun:'Tempo ensolarado',rain:'Chuva ativada',night:'Exploração noturna'}[state.mode]);persist()}
-function resetCar(){spawnPlayer(state.world);state.player.speed=0;pause(false);toast('Carro recuperado e pronto!')}
+function resetCar(){spawnPlayer(state.world);state.player.speed=0;state.player.trailerAngle=state.player.angle;pause(false);toast('Veículo recuperado e pronto!')}
 function bindHold(id,key){const el=$(id);let pointers=new Set();driveInput.releases.push(()=>{pointers.clear();el.classList.remove('pressed')});el.addEventListener('pointerdown',e=>{e.preventDefault();if(state.paused||state.loading)return;pointers.add(e.pointerId);state.keys[key]=true;el.classList.add('pressed');try{el.setPointerCapture(e.pointerId)}catch{}});const release=e=>{pointers.delete(e.pointerId);if(!pointers.size){state.keys[key]=false;el.classList.remove('pressed')}};el.addEventListener('pointerup',release);el.addEventListener('pointercancel',release);el.addEventListener('lostpointercapture',e=>{pointers.delete(e.pointerId);if(!pointers.size){state.keys[key]=false;el.classList.remove('pressed')}})}
 
 /* Cesium ion — mundo real. O JWT é um token CLIENTE do Cesium ion: restrinja domínios e permissões na sua conta.
@@ -9591,7 +10447,7 @@ async function activateCesium(){const w=state.world;if(!w?.real)return;const ser
 }
 function updateCesiumPosition(force=false){const d=cesiumData,v=d.viewer,w=state.world;if(!v||!w?.real||state.viewMode!=='cesium')return;if(!force&&state.now-d.lastDraw<.055)return;d.lastDraw=state.now;const C=window.Cesium,geo=toGeographic();const air=clamp(360-(state.zoom-3.9)*65,170,550);const height=d.surfaceReady?d.surfaceHeight+air:1800;const signature=[state.player.x,state.player.y,state.player.angle,state.zoom,height,state.player.onFoot,state.player.color,state.player.vkind].join('|');if(!force&&d.lastPosition===signature)return;d.lastPosition=signature;v.camera.setView({destination:C.Cartesian3.fromDegrees(geo.lon,geo.lat,height),orientation:{heading:0,pitch:-Math.PI/2,roll:0}});v.scene.requestRender()}
 
-function bindEvents(){window.addEventListener('resize',()=>{resize();if(cesiumData.viewer)cesiumData.viewer.resize()});$('aerialButton').addEventListener('click',toggleAerial);$('cesiumButton').addEventListener('click',toggleCesium);$('cesiumTestButton').addEventListener('click',testCesiumConnection);window.addEventListener('blur',()=>{releaseGameplayInput();document.querySelectorAll('.controlBtn').forEach(e=>e.classList.remove('pressed'))});window.addEventListener('keydown',e=>{const ae=document.activeElement;if(ae&&['INPUT','TEXTAREA'].includes(ae.tagName)&&!ae.closest('.hidden'))return;const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();state.keys[k]=true;if(e.repeat)return;if(k==='f'){e.preventDefault();interactVehicle();return}if(k==='escape'&&document.querySelector('.topbar').classList.contains('menuOpen')){document.querySelector('.topbar').classList.remove('menuOpen');$('moreControls').setAttribute('aria-expanded','false');return}if(k==='escape'){if(state.loading){loadingController?.abort();return}if(phoneOpen()){hidePhone();return}if(!$('poiModal').classList.contains('hidden')){setModal('poiModal',false);state.paused=false}else if(!$('mapModal').classList.contains('hidden'))hideMap();else pause();return}if(k==='c'){if(state.loading)return;if(phoneOpen())hidePhone();else showPhone('home');return}if(k==='p'){pause();return}if(k==='m'){if(phoneOpen())hidePhone();if(!$('mapModal').classList.contains('hidden'))hideMap();else showMap();return}if(k==='l'){showPOIs();return}if(k==='h'){toast('Faróis ligados à noite automaticamente');return}if(k==='r'){resetCar();return}if(k==='+'||k==='='){state.zoom=clamp(state.zoom+.3,2.0,7.4);persist()}if(k==='-'||k==='_'){state.zoom=clamp(state.zoom-.3,2.0,7.4);persist()}});window.addEventListener('keyup',e=>{state.keys[e.key.toLowerCase()]=false});$('expandArea').addEventListener('click',expandRealArea);$('missionButton').addEventListener('click',startMission);$('placesButton').addEventListener('click',showPOIs);$('phoneButton')?.addEventListener('click',()=>showPhone('home'));$('cashHudChip')?.addEventListener('click',()=>showPhone('bank'));$('mobileCashBtn')?.addEventListener('click',()=>showPhone('bank'));$('closePhone')?.addEventListener('click',hidePhone);$('phoneCloseBtn')?.addEventListener('click',hidePhone);$('phoneHomeBtn')?.addEventListener('click',()=>openPhoneApp('home'));$('phoneModal')?.addEventListener('pointerdown',e=>{if(e.target===$('phoneModal'))hidePhone()});$('appOpenRace')?.addEventListener('click',()=>openPhoneApp('race'));$('appOpenBank')?.addEventListener('click',()=>openPhoneApp('bank'));$('appOpenShop')?.addEventListener('click',()=>openPhoneApp('shop'));$('appOpenGarage')?.addEventListener('click',()=>openPhoneApp('garage'));$('appOpenGps')?.addEventListener('click',()=>{hidePhone();showMap();});$('appOpenDelivery')?.addEventListener('click',()=>{hidePhone();startMission();});$('appToggleWeather')?.addEventListener('click',()=>{rotateWeather();openPhoneApp('home');});$('appToggleSound')?.addEventListener('click',()=>{state.sound=!state.sound;setupAudio();persist();openPhoneApp('home');});$('raceBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('bankBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('shopBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('garageBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('shopTabs')?.addEventListener('click',e=>{const b=e.target.closest('.shopTabBtn');if(b){phoneUi.shopCat=b.dataset.cat;renderPhoneShop();}});$('shopCarList')?.addEventListener('click',e=>{const card=e.target.closest('[data-car-id]');if(card)buyShopCar(card.dataset.carId);});$('garageCarList')?.addEventListener('click',e=>{const card=e.target.closest('[data-car-id]');if(card)equipGarageCar(card.dataset.carId);});$('raceRerollBtn')?.addEventListener('click',()=>generateRaceDraft(phoneUi.mode));$('raceStartBtn')?.addEventListener('click',startRaceFromPhone);$('raceModeRow')?.addEventListener('click',e=>{const b=e.target.closest('.phoneSegBtn');if(b)generateRaceDraft(b.dataset.mode);});$('raceBetGrid')?.addEventListener('click',e=>{const b=e.target.closest('.raceBetBtn');if(!b||b.disabled)return;phoneUi.bet=b.dataset.bet==='all'?'all':Number(b.dataset.bet);renderRaceDraftUI();});$('bankBonusBtn')?.addEventListener('click',()=>{const now=Date.now();if((state.player.cash||0)>=50&&now-(state.lastBonusAt||0)<120000)return;state.lastBonusAt=now;addMoney(200,'Bônus Piloto PixelBank','bonus');playTone('cash');renderPhoneBank();toast('💵 +R$ 200 creditados no PixelBank!');});$('closePois').addEventListener('click',()=>{setModal('poiModal',false);state.paused=false});$('poiModal').addEventListener('pointerdown',e=>{if(e.target===$('poiModal')){setModal('poiModal',false);state.paused=false}});$('mapButton').addEventListener('click',showMap);$('closeMap').addEventListener('click',hideMap);$('mapModal').addEventListener('pointerdown',e=>{if(e.target===$('mapModal'))hideMap()});$('pauseButton').addEventListener('click',()=>pause());$('quickPause').addEventListener('click',()=>pause());$('resumeButton').addEventListener('click',()=>pause(false));$('restartButton').addEventListener('click',resetCar);$('pauseMapButton').addEventListener('click',showMap);$('weatherButton').addEventListener('click',rotateWeather);$('audioButton').addEventListener('click',()=>{state.sound=!state.sound;setupAudio();persist()});$('clearRoute').addEventListener('click',clearDestination);$('tipDismiss').addEventListener('click',()=>{$('tipBar').classList.add('hidden');state.tipDismissed=true});$('searchButton').addEventListener('click',searchPlace);$('placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')searchPlace()});$('routeAddressButton')?.addEventListener('click',searchRouteAddress);$('routeAddressInput')?.addEventListener('input',()=>populateInitialRouteSuggestions());$('routeAddressInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchRouteAddress();}});document.querySelectorAll('.preset').forEach(el=>el.addEventListener('click',()=>loadReal(+el.dataset.lat,+el.dataset.lon,el.dataset.name)));$('coordButton').addEventListener('click',()=>{const c=parseCoord($('coordInput').value);if(!c){toast('Cole as coordenadas ou um link do Maps com @latitude,longitude');return}loadReal(c.lat,c.lon,'Coordenadas '+c.lat.toFixed(4)+', '+c.lon.toFixed(4))});$('downloadMap').addEventListener('click',saveMapFile);$('importFile').addEventListener('change',e=>{importMapFile(e.target.files?.[0]);e.target.value=''});$('cancelLoading').addEventListener('click',()=>{loadingController?.abort();setLoading(false);state.paused=!state.world;toast('Carregamento cancelado')});mini.addEventListener('click',e=>{if(state.loading)return;const r=mini.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*mini.width,y=(e.clientY-r.top)/r.height*mini.height;const wx=state.player.x+(x-mini.width/2)/state.miniZoom,wy=state.player.y+(y-mini.height/2)/state.miniZoom;setDestination(wx,wy)});$('expandMini').addEventListener('click',()=>{state.minimapExpanded=!state.minimapExpanded;document.querySelector('.minimapPanel').classList.toggle('expanded',state.minimapExpanded);$('expandMini').textContent=state.minimapExpanded?'⤡':'⤢';mini.width=state.minimapExpanded?300:232;mini.height=state.minimapExpanded?235:178;});canvas.addEventListener('pointerdown',e=>{if(e.shiftKey){const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*state.renderW/r.width,y=(e.clientY-r.top)*state.renderH/r.height;const wx=state.cam.x+(x-state.renderW/2)/state.zoom,wy=state.cam.y+(y-state.renderH/2)/state.zoom;setDestination(wx,wy)}});canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom+(e.deltaY>0?-.18:.18),2.0,7.4)},{passive:false});for(const [id,key] of [['touchLeft','touchleft'],['touchRight','touchright'],['touchGas','touchgas'],['touchBrake','touchbrake'],['touchDrift','touchdrift'],['touchNitro','touchnitro']])bindHold(id,key);document.addEventListener('visibilitychange',()=>{if(document.hidden){state.last=0;releaseGameplayInput();persist()}});setInterval(persist,30000)}
+function bindEvents(){window.addEventListener('resize',()=>{resize();if(cesiumData.viewer)cesiumData.viewer.resize()});$('aerialButton').addEventListener('click',toggleAerial);$('cesiumButton').addEventListener('click',toggleCesium);$('cesiumTestButton').addEventListener('click',testCesiumConnection);window.addEventListener('blur',()=>{releaseGameplayInput();document.querySelectorAll('.controlBtn').forEach(e=>e.classList.remove('pressed'))});window.addEventListener('keydown',e=>{const ae=document.activeElement;if(ae&&['INPUT','TEXTAREA'].includes(ae.tagName)&&!ae.closest('.hidden'))return;const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();state.keys[k]=true;if(e.repeat)return;if(k==='f'){e.preventDefault();interactVehicle();return}if(k==='escape'&&document.querySelector('.topbar').classList.contains('menuOpen')){document.querySelector('.topbar').classList.remove('menuOpen');$('moreControls').setAttribute('aria-expanded','false');return}if(k==='escape'){if(state.loading){loadingController?.abort();return}if(phoneOpen()){hidePhone();return}if(!$('poiModal').classList.contains('hidden')){setModal('poiModal',false);state.paused=false}else if(!$('mapModal').classList.contains('hidden'))hideMap();else pause();return}if(k==='c'){if(state.loading)return;if(phoneOpen())hidePhone();else showPhone('home');return}if(k==='p'){pause();return}if(k==='m'){if(phoneOpen())hidePhone();if(!$('mapModal').classList.contains('hidden'))hideMap();else showMap();return}if(k==='l'){showPOIs();return}if(k==='h'){toast('Faróis ligados à noite automaticamente');return}if(k==='r'){resetCar();return}if(k==='+'||k==='='){state.zoom=clamp(state.zoom+.3,2.0,7.4);persist()}if(k==='-'||k==='_'){state.zoom=clamp(state.zoom-.3,2.0,7.4);persist()}});window.addEventListener('keyup',e=>{state.keys[e.key.toLowerCase()]=false});$('expandArea').addEventListener('click',expandRealArea);$('missionButton').addEventListener('click',startMission);$('placesButton').addEventListener('click',showPOIs);$('phoneButton')?.addEventListener('click',()=>showPhone('home'));$('cashHudChip')?.addEventListener('click',()=>showPhone('bank'));$('mobileCashBtn')?.addEventListener('click',()=>showPhone('bank'));$('closePhone')?.addEventListener('click',hidePhone);$('phoneCloseBtn')?.addEventListener('click',hidePhone);$('phoneHomeBtn')?.addEventListener('click',()=>openPhoneApp('home'));$('phoneModal')?.addEventListener('pointerdown',e=>{if(e.target===$('phoneModal'))hidePhone()});$('appOpenFreight')?.addEventListener('click',()=>openPhoneApp('freight'));$('appOpenIfuud')?.addEventListener('click',()=>openPhoneApp('ifuud'));$('appOpenRace')?.addEventListener('click',()=>openPhoneApp('race'));$('appOpenBank')?.addEventListener('click',()=>openPhoneApp('bank'));$('appOpenShop')?.addEventListener('click',()=>openPhoneApp('shop'));$('appOpenGarage')?.addEventListener('click',()=>openPhoneApp('garage'));$('appOpenGps')?.addEventListener('click',()=>{hidePhone();showMap();});$('appOpenDelivery')?.addEventListener('click',()=>{hidePhone();startMission();});$('appToggleWeather')?.addEventListener('click',()=>{rotateWeather();openPhoneApp('home');});$('appToggleSound')?.addEventListener('click',()=>{state.sound=!state.sound;setupAudio();persist();openPhoneApp('home');});$('freightBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('freightCalcBtn')?.addEventListener('click',searchFreightDestination);$('freightDestInput')?.addEventListener('input',()=>renderFreightSuggestions(getFreightDestinationCandidates(($('freightDestInput')?.value||'').trim())));$('freightDestInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchFreightDestination();}});$('freightRerollBtn')?.addEventListener('click',()=>{generateFreightOffers();renderPhoneFreight();});$('freightOffersList')?.addEventListener('click',e=>{const b=e.target.closest('[data-freight-idx]');if(b){const of=phoneUi.freightOffers?.[Number(b.dataset.freightIdx)];if(of)acceptFreightPayload(of);}});$('ifuudBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('ifuudRerollBtn')?.addEventListener('click',()=>{generateIfuudOffers();renderPhoneIfuud();});$('ifuudOrderList')?.addEventListener('click',e=>{const b=e.target.closest('[data-ifuud-idx]');if(b)acceptIfuudOrder(Number(b.dataset.ifuudIdx));});$('raceBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('bankBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('shopBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('garageBackHome')?.addEventListener('click',()=>openPhoneApp('home'));$('shopTabs')?.addEventListener('click',e=>{const b=e.target.closest('.shopTabBtn');if(b){phoneUi.shopCat=b.dataset.cat;renderPhoneShop();}});$('shopCarList')?.addEventListener('click',e=>{const card=e.target.closest('[data-car-id]');if(card)buyShopCar(card.dataset.carId);});$('garageCarList')?.addEventListener('click',e=>{const card=e.target.closest('[data-car-id]');if(card)equipGarageCar(card.dataset.carId);});$('raceRerollBtn')?.addEventListener('click',()=>generateRaceDraft(phoneUi.mode));$('raceStartBtn')?.addEventListener('click',startRaceFromPhone);$('raceModeRow')?.addEventListener('click',e=>{const b=e.target.closest('.phoneSegBtn');if(b)generateRaceDraft(b.dataset.mode);});$('raceBetGrid')?.addEventListener('click',e=>{const b=e.target.closest('.raceBetBtn');if(!b||b.disabled)return;phoneUi.bet=b.dataset.bet==='all'?'all':Number(b.dataset.bet);renderRaceDraftUI();});$('bankBonusBtn')?.addEventListener('click',()=>{const now=Date.now();if((state.player.cash||0)>=50&&now-(state.lastBonusAt||0)<120000)return;state.lastBonusAt=now;addMoney(200,'Bônus Piloto PixelBank','bonus');playTone('cash');renderPhoneBank();toast('💵 +R$ 200 creditados no PixelBank!');});$('closePois').addEventListener('click',()=>{setModal('poiModal',false);state.paused=false});$('poiModal').addEventListener('pointerdown',e=>{if(e.target===$('poiModal')){setModal('poiModal',false);state.paused=false}});$('mapButton').addEventListener('click',showMap);$('closeMap').addEventListener('click',hideMap);$('mapModal').addEventListener('pointerdown',e=>{if(e.target===$('mapModal'))hideMap()});$('pauseButton').addEventListener('click',()=>pause());$('quickPause').addEventListener('click',()=>pause());$('resumeButton').addEventListener('click',()=>pause(false));$('restartButton').addEventListener('click',resetCar);$('pauseMapButton').addEventListener('click',showMap);$('weatherButton').addEventListener('click',rotateWeather);$('audioButton').addEventListener('click',()=>{state.sound=!state.sound;setupAudio();persist()});$('clearRoute').addEventListener('click',clearDestination);$('tipDismiss').addEventListener('click',()=>{$('tipBar').classList.add('hidden');state.tipDismissed=true});$('searchButton').addEventListener('click',searchPlace);$('placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')searchPlace()});$('routeAddressButton')?.addEventListener('click',searchRouteAddress);$('routeAddressInput')?.addEventListener('input',()=>populateInitialRouteSuggestions());$('routeAddressInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchRouteAddress();}});document.querySelectorAll('.preset').forEach(el=>el.addEventListener('click',()=>loadReal(+el.dataset.lat,+el.dataset.lon,el.dataset.name)));$('coordButton').addEventListener('click',()=>{const c=parseCoord($('coordInput').value);if(!c){toast('Cole as coordenadas ou um link do Maps com @latitude,longitude');return}loadReal(c.lat,c.lon,'Coordenadas '+c.lat.toFixed(4)+', '+c.lon.toFixed(4))});$('downloadMap').addEventListener('click',saveMapFile);$('importFile').addEventListener('change',e=>{importMapFile(e.target.files?.[0]);e.target.value=''});$('cancelLoading').addEventListener('click',()=>{loadingController?.abort();setLoading(false);state.paused=!state.world;toast('Carregamento cancelado')});mini.addEventListener('click',e=>{if(state.loading)return;const r=mini.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*mini.width,y=(e.clientY-r.top)/r.height*mini.height;const wx=state.player.x+(x-mini.width/2)/state.miniZoom,wy=state.player.y+(y-mini.height/2)/state.miniZoom;setDestination(wx,wy)});$('expandMini').addEventListener('click',()=>{state.minimapExpanded=!state.minimapExpanded;document.querySelector('.minimapPanel').classList.toggle('expanded',state.minimapExpanded);$('expandMini').textContent=state.minimapExpanded?'⤡':'⤢';mini.width=state.minimapExpanded?300:232;mini.height=state.minimapExpanded?235:178;});canvas.addEventListener('pointerdown',e=>{if(e.shiftKey){const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*state.renderW/r.width,y=(e.clientY-r.top)*state.renderH/r.height;const wx=state.cam.x+(x-state.renderW/2)/state.zoom,wy=state.cam.y+(y-state.renderH/2)/state.zoom;setDestination(wx,wy)}});canvas.addEventListener('wheel',e=>{e.preventDefault();state.zoom=clamp(state.zoom+(e.deltaY>0?-.18:.18),2.0,7.4)},{passive:false});for(const [id,key] of [['touchLeft','touchleft'],['touchRight','touchright'],['touchGas','touchgas'],['touchBrake','touchbrake'],['touchDrift','touchdrift'],['touchNitro','touchnitro']])bindHold(id,key);document.addEventListener('visibilitychange',()=>{if(document.hidden){state.last=0;releaseGameplayInput();persist()}});setInterval(persist,30000)}
 // Arcade driving extension. The map, vector caches and existing route graph stay in use.
 const VEHICLE_SPECS={
  hatch:{L:4.15,W:2.02,cabL:2.25,cabOff:-.18,bodyH:.56,cabH:1.06,accel:1.04,top:.96},
@@ -9599,7 +10455,11 @@ const VEHICLE_SPECS={
  suv:{L:4.95,W:2.22,cabL:3.05,cabOff:-.22,bodyH:.68,cabH:1.28,accel:.9,top:.95},
  van:{L:5.45,W:2.26,cabL:3.85,cabOff:-.15,bodyH:.78,cabH:1.52,accel:.8,top:.86},
  bus:{L:10.4,W:2.62,cabL:9.7,cabOff:0,bodyH:.95,cabH:1.88,accel:.62,top:.76},
- sport:{L:4.68,W:2.14,cabL:2.22,cabOff:-.16,bodyH:.54,cabH:1.04,accel:1.12,top:1.08}
+ sport:{L:4.68,W:2.14,cabL:2.22,cabOff:-.16,bodyH:.54,cabH:1.04,accel:1.12,top:1.08},
+ moto:{L:2.65,W:1.12,cabL:1.2,cabOff:0,bodyH:.5,cabH:.95,accel:1.2,top:1.05},
+ pickup:{L:5.2,W:2.24,cabL:2.5,cabOff:-.1,bodyH:.74,cabH:1.38,accel:.94,top:.94},
+ truck:{L:7.2,W:2.56,cabL:2.4,cabOff:-.1,bodyH:.92,cabH:1.78,accel:.8,top:.87},
+ semi:{L:3.2,W:2.64,cabL:2.8,cabOff:0,bodyH:1.05,cabH:2.02,accel:.82,top:.95}
 };
 const driveInput={x:0,y:0,joystick:null,releases:[]};
 const trafficSpatial={cells:new Map(),size:32,graph:null,nodes:null,serial:0,lastBalance:-10};
@@ -9609,13 +10469,28 @@ function releaseGameplayInput(){
  for(const release of driveInput.releases)release();
  document.querySelectorAll('.controlBtn.pressed').forEach(e=>e.classList.remove('pressed'));
 }
+function getArticulatedGeometry(v){
+ const carCfg=v?.carId?CAR_MAP.get(v.carId):null;
+ if(!carCfg?.articulated||!carCfg?.tr)return null;
+ const tr=carCfg.tr,wpp=carCfg.len/tr.sh;
+ const cabMidY=tr.cabEndY*0.5,trH=tr.sh-tr.trStartY,trMidY=tr.trStartY+trH*0.5;
+ const dHitchBack=(tr.hitchY-cabMidY)*wpp,dTrBack=(trMidY-tr.hitchY)*wpp;
+ const axleDist=Math.max(2.6,(tr.sh-tr.hitchY)*0.72*wpp);
+ const cabAng=v.angle,trAng=Number.isFinite(v.trailerAngle)?v.trailerAngle:cabAng;
+ const hx=v.x-Math.cos(cabAng)*dHitchBack,hy=v.y-Math.sin(cabAng)*dHitchBack;
+ const tx=hx-Math.cos(trAng)*dTrBack,ty=hy-Math.sin(trAng)*dTrBack;
+ return {
+  worldPerPx:wpp,hx,hy,tx,ty,cabAng,trAng,dHitchBack,dTrBack,axleDist,
+  cabW:tr.sw*wpp,cabLen:tr.cabEndY*wpp,trW:tr.sw*wpp,trLen:trH*wpp
+ };
+}
 function initializePlayerVehicle(){
  const p=state.player;
  p.onFoot=false;p.vx=p.vy=0;p.nitro=100;p.nitroActive=false;p.drifting=false;p.phase=0;
  p.carId=state.equippedCar||p.carId||'c_0_0';
  const carCfg=CAR_MAP.get(p.carId);
- p.color=carCfg?.color||'#facc15';p.vkind='sport';p.vehicleId='player';p._nitroAt=-10;
- ensureCarAtlas();
+ p.color=carCfg?.color||'#facc15';p.vkind=vehicleKindForItem(carCfg);p.trailerAngle=p.angle;p.vehicleId='player';p._nitroAt=-10;
+ ensureCarAtlas();ensureVehicleAtlas('moto');ensureVehicleAtlas('truck');
  state.parkedCars=[];trafficSpatial.cells.clear();trafficSpatial.graph=null;trafficSpatial.lastBalance=-10;
  releaseGameplayInput();
 }
@@ -9646,17 +10521,53 @@ function vehicleContainsPoint(car,x,y,pad=.5){
  const sp=VEHICLE_SPECS[car.vkind]||VEHICLE_SPECS.sedan,c=Math.cos(car.angle),s=Math.sin(car.angle),dx=x-car.x,dy=y-car.y;
  return Math.abs(dx*c+dy*s)<sp.L*.5+pad&&Math.abs(-dx*s+dy*c)<sp.W*.5+pad;
 }
-function vehiclesOverlap(a,b){
- const sa=VEHICLE_SPECS[a.vkind]||VEHICLE_SPECS.sedan,sb=VEHICLE_SPECS[b.vkind]||VEHICLE_SPECS.sedan;
- const ac=Math.cos(a.angle),as=Math.sin(a.angle),bc=Math.cos(b.angle),bs=Math.sin(b.angle),dx=b.x-a.x,dy=b.y-a.y;
+function _obbOverlap(ax,ay,aa,aL,aW,bx,by,ba,bL,bW){
+ const ac=Math.cos(aa),as=Math.sin(aa),bc=Math.cos(ba),bs=Math.sin(ba),dx=bx-ax,dy=by-ay;
  for(const [x,y] of [[ac,as],[-as,ac],[bc,bs],[-bs,bc]]){
-  const ra=sa.L*.5*Math.abs(x*ac+y*as)+sa.W*.5*Math.abs(-x*as+y*ac);
-  const rb=sb.L*.5*Math.abs(x*bc+y*bs)+sb.W*.5*Math.abs(-x*bs+y*bc);
+  const ra=aL*.5*Math.abs(x*ac+y*as)+aW*.5*Math.abs(-x*as+y*ac);
+  const rb=bL*.5*Math.abs(x*bc+y*bs)+bW*.5*Math.abs(-x*bs+y*bc);
   if(Math.abs(dx*x+dy*y)>ra+rb+.08)return false;
  }
  return true;
 }
+function _entityParts(v){
+ const geo=getArticulatedGeometry(v);
+ if(geo){
+  return [
+   {x:v.x,y:v.y,angle:geo.cabAng,L:geo.cabLen,W:geo.cabW},
+   {x:geo.tx,y:geo.ty,angle:geo.trAng,L:geo.trLen,W:geo.trW}
+  ];
+ }
+ const s=VEHICLE_SPECS[v.vkind]||VEHICLE_SPECS.sedan;
+ const cfg=v.carId?CAR_MAP.get(v.carId):null;
+ const L=cfg?.kind==='truck'?cfg.len:s.L,W=cfg?.kind==='truck'?Math.min(2.68,cfg.tr.sw*(cfg.len/cfg.tr.sh)):s.W;
+ return [{x:v.x,y:v.y,angle:v.angle,L,W}];
+}
+function vehiclesOverlap(a,b){
+ const pa=_entityParts(a),pb=_entityParts(b);
+ for(const ua of pa)for(const ub of pb){
+  if(_obbOverlap(ua.x,ua.y,ua.angle,ua.L,ua.W,ub.x,ub.y,ub.angle,ub.L,ub.W))return true;
+ }
+ return false;
+}
 function playerBuildingCollision(p){
+ const geo=getArticulatedGeometry(p);
+ if(geo){
+  const cabR=geo.cabW*.46,trR=geo.trW*.46;
+  const cc=Math.cos(geo.cabAng),cs=Math.sin(geo.cabAng);
+  if(getBuildingCollision(p.x,p.y,cabR)||getBuildingCollision(p.x+cc*geo.cabLen*.35,p.y+cs*geo.cabLen*.35,cabR))return true;
+  const tc=Math.cos(geo.trAng),ts=Math.sin(geo.trAng);
+  for(const t of [-0.82,-0.4,0,0.4,0.82]){
+   if(getBuildingCollision(geo.tx+tc*(geo.trLen*0.5-trR)*t,geo.ty+ts*(geo.trLen*0.5-trR)*t,trR))return true;
+  }
+  return false;
+ }
+ const cfg=p.carId?CAR_MAP.get(p.carId):null;
+ if(cfg?.kind==='truck'){
+  const r=1.18,offset=cfg.len*.5-r,c=Math.cos(p.angle),s=Math.sin(p.angle);
+  for(const t of [-1,-0.5,0,0.5,1])if(getBuildingCollision(p.x+c*offset*t,p.y+s*offset*t,r))return true;
+  return false;
+ }
  if(getBuildingCollision(p.x,p.y,1.7))return true;
  if(p.vkind!=='bus'&&p.vkind!=='van')return false;
  const sp=VEHICLE_SPECS[p.vkind],radius=sp.W*.5+.12,offset=sp.L*.5-radius,c=Math.cos(p.angle),s=Math.sin(p.angle);
@@ -9901,9 +10812,12 @@ function updateTraffic(dt){
   }
   car.onBridge=Boolean(car.way?.bridge);car.bridgeElev=car.onBridge?lerp(car.from._elev||0,car.to._elev||0,car.t):0;
   trafficPosition(car);
-  if(!p.onFoot&&d2<144&&Math.abs((car.bridgeElev||0)-(p.bridgeElev||0))<1.6&&Math.abs(p.speed)>2.5&&vehiclesOverlap(car,p)&&state.now-(car.lastHit??-10)>1.3){
+  if(!p.onFoot&&d2<360&&Math.abs((car.bridgeElev||0)-(p.bridgeElev||0))<1.6&&Math.abs(p.speed)>2.2&&vehiclesOverlap(car,p)&&state.now-(car.lastHit??-10)>1.3){
+   const hitSpd=Math.max(Math.abs(p.speed),car.speed||0);
    car.lastHit=state.now;p.speed*=-.2;p.vx*=.15;p.vy*=.15;
-   p.x-=Math.cos(p.angle)*1.2;p.y-=Math.sin(p.angle)*1.2;car.speed*=.4;toast('Colisão! Cuidado com o trânsito.');
+   p.x-=Math.cos(p.angle)*1.2;p.y-=Math.sin(p.angle)*1.2;car.speed*=.4;
+   if(state.freight)damageFreightCargo(hitSpd,'Colisão no trânsito');
+   else toast('Colisão! Cuidado com o trânsito.');
   }
  }
  // Positions are ready for walking, interaction and collision queries on the next frame.
@@ -9934,7 +10848,7 @@ function interactVehicle(){
    exit={x,y};break;
   }
   if(!exit){toast('Sem espaço para sair aqui. Tente um pouco à frente.');return;}
-  const parked={id:p.vehicleId,x:p.x,y:p.y,angle:p.angle,color:p.color,vkind:p.vkind,carId:p.carId||null,nitro:p.nitro,onBridge:p.onBridge,bridgeElev:p.bridgeElev,parked:true,speed:0};
+  const parked={id:p.vehicleId,x:p.x,y:p.y,angle:p.angle,trailerAngle:p.trailerAngle,color:p.color,vkind:p.vkind,carId:p.carId||null,nitro:p.nitro,onBridge:p.onBridge,bridgeElev:p.bridgeElev,parked:true,speed:0};
   state.parkedCars.push(parked);insertTrafficCell(parked);
   p.x=exit.x;p.y=exit.y;p.onFoot=true;p.speed=0;p.vx=p.vy=0;p.nitroActive=false;p.drifting=false;
   releaseGameplayInput();toast('Você está a pé. Use F perto de um carro para entrar.');
@@ -9942,7 +10856,7 @@ function interactVehicle(){
   const car=nearestEnterableVehicle();if(!car){toast('Aproxime-se de um carro parado ou devagar e aperte F.');return;}
   if(car.parked)state.parkedCars.splice(state.parkedCars.indexOf(car),1);
   else state.traffic.splice(state.traffic.indexOf(car),1);
-  Object.assign(p,{x:car.x,y:car.y,angle:car.angle,speed:car.speed||0,color:car.color,vkind:car.vkind,carId:car.carId||null,nitro:car.nitro??100,vehicleId:car.id,onBridge:car.onBridge,bridgeElev:car.bridgeElev||0,onFoot:false,nitroActive:false,drifting:false,_nitroAt:-10});
+  Object.assign(p,{x:car.x,y:car.y,angle:car.angle,trailerAngle:Number.isFinite(car.trailerAngle)?car.trailerAngle:car.angle,speed:car.speed||0,color:car.color,vkind:car.vkind,carId:car.carId||null,nitro:car.nitro??100,vehicleId:car.id,onBridge:car.onBridge,bridgeElev:car.bridgeElev||0,onFoot:false,nitroActive:false,drifting:false,_nitroAt:-10});
   p.vx=Math.cos(p.angle)*p.speed;p.vy=Math.sin(p.angle)*p.speed;
   releaseGameplayInput();rebuildTrafficSpatial();toast('No volante! Espaço: drift · Shift: nitro.');
  }
@@ -9961,10 +10875,14 @@ function moveDrivingPlayer(dt,vx,vy){
   {
    const ground=!state.world.freeDrive&&(!p.onBridge||p.bridgeElev<2);
    const wall=ground&&playerBuildingCollision(p),pier=ground&&!wall&&!p.onBridge&&getPierCollision(p.x,p.y,1.35);
-   const parked=!wall&&!pier&&nearbyVehicles(p.x,p.y,16).some(car=>car.parked&&Math.abs((car.bridgeElev||0)-(p.bridgeElev||0))<1.6&&vehiclesOverlap(p,car));
+   const parked=!wall&&!pier&&nearbyVehicles(p.x,p.y,22).some(car=>car.parked&&Math.abs((car.bridgeElev||0)-(p.bridgeElev||0))<1.6&&vehiclesOverlap(p,car));
    if(wall||pier||parked){
+    const hitSpd=Math.abs(p.speed);
     p.x=ox;p.y=oy;
-    if(Math.abs(p.speed)>2.5&&state.now-(p.lastWallHit??-10)>1){p.lastWallHit=state.now;toast(parked?'Cuidado com o carro estacionado!':pier?'Você bateu no pilar do viaduto!':'Você bateu em uma construção!');}
+    if(hitSpd>2.2){
+     if(state.freight)damageFreightCargo(hitSpd,parked?'Batida em veículo parado':pier?'Batida em pilar':'Batida em construção');
+     else if(hitSpd>2.5&&state.now-(p.lastWallHit??-10)>1){p.lastWallHit=state.now;toast(parked?'Cuidado com o carro estacionado!':pier?'Você bateu no pilar do viaduto!':'Você bateu em uma construção!');}
+    }
     p.speed*=-.26;p.vx=p.vy=0;p.drifting=false;break;
    }
   }
@@ -10019,24 +10937,46 @@ function updatePlayer(dt){
  const max=(offroad?13:isHwy?42:onDirt?27:34)*spTop*(p.nitroActive?1.4:1);
  const limit=!p.nitroActive&&previousSpeed>max?Math.max(max,previousSpeed-dt*9):max;
  p.speed=clamp(p.speed,offroad?-7:-12,limit);
- const steer=clamp((right?1:0)-(left?1:0)+state.manualSteer,-1,1),speed=Math.abs(p.speed);
- if(steer&&speed>.12){const turn=(.8+1.35*clamp(1-speed/38,0,1))*clamp(speed/8,.25,1.25);p.angle+=steer*turn*(p.speed>=0?1:-1)*dt*(handbrake?1.75:onDirt?1.08:1);}
+ const steer=clamp((right?1:0)-(left?1:0)+state.manualSteer,-1,1),speed=Math.abs(p.speed),isMoto=p.vkind==='moto',isSemi=Boolean(carCfg?.articulated);
+ const prevTrailerAngle=Number.isFinite(p.trailerAngle)?p.trailerAngle:p.angle;
+ let prevAxleX=null,prevAxleY=null,trGeoPre=null;
+ if(isSemi){
+  trGeoPre=getArticulatedGeometry(p);
+  if(trGeoPre){
+   prevAxleX=trGeoPre.hx-Math.cos(trGeoPre.trAng)*trGeoPre.axleDist;
+   prevAxleY=trGeoPre.hy-Math.sin(trGeoPre.trAng)*trGeoPre.axleDist;
+  }
+ }
+ if(steer&&speed>.12){const turn=(.8+1.35*clamp(1-speed/38,0,1))*clamp(speed/8,.25,1.25)*(isMoto?1.24:isSemi?0.92:1);p.angle+=steer*turn*(p.speed>=0?1:-1)*dt*(handbrake?1.75:onDirt?1.08:1);}
  const oldX=p.x,oldY=p.y,grip=handbrake?(onDirt?1.7:1.35):onDirt?4.5:10.5,blend=1-Math.exp(-grip*dt);
  p.vx=lerp(p.vx||0,Math.cos(p.angle)*p.speed,blend);p.vy=lerp(p.vy||0,Math.sin(p.angle)*p.speed,blend);
  const lateral=-Math.sin(p.angle)*p.vx+Math.cos(p.angle)*p.vy;
  p.drifting=speed>4&&Math.abs(lateral)>1.6;
  moveDrivingPlayer(dt,p.vx,p.vy);
+ if(isSemi&&trGeoPre&&prevAxleX!==null){
+  const trGeoPost=getArticulatedGeometry(p);
+  if(trGeoPost){
+   const nextTrAng=Math.atan2(trGeoPost.hy-prevAxleY,trGeoPost.hx-prevAxleX);
+   let diff=Math.atan2(Math.sin(nextTrAng-p.angle),Math.cos(nextTrAng-p.angle));
+   if(speed<0.25)diff*=Math.exp(-dt*1.2);
+   const maxLock=p.speed<-0.2?0.98:1.12;
+   p.trailerAngle=p.angle+clamp(diff,-maxLock,maxLock);
+   if(!state.world.freeDrive&&(!p.onBridge||p.bridgeElev<2)&&playerBuildingCollision(p)){
+    p.trailerAngle=prevTrailerAngle;
+   }
+  }
+ }else p.trailerAngle=p.angle;
  const leaveSkid=onRoad&&!p.onBridge&&((handbrake&&speed>3)||(brake&&p.speed>9)||p.drifting);
  if(leaveSkid){
-  const c=Math.cos(p.angle),s=Math.sin(p.angle),ox=oldX-c*1.45,oy=oldY-s*1.45,nx=p.x-c*1.45,ny=p.y-s*1.45;
-  state.skids.push({x1:ox+s*.82,y1:oy-c*.82,x2:nx+s*.82,y2:ny-c*.82,x3:ox-s*.82,y3:oy+c*.82,x4:nx-s*.82,y4:ny+c*.82,born:state.now,onBridge:false,dirt:onDirt});
+  const c=Math.cos(p.angle),s=Math.sin(p.angle),bk=isMoto?1.0:1.45,wOff=isMoto?.14:.82,ox=oldX-c*bk,oy=oldY-s*bk,nx=p.x-c*bk,ny=p.y-s*bk;
+  state.skids.push({x1:ox+s*wOff,y1:oy-c*wOff,x2:nx+s*wOff,y2:ny-c*wOff,x3:ox-s*wOff,y3:oy+c*wOff,x4:nx-s*wOff,y4:ny+c*wOff,born:state.now,onBridge:false,dirt:onDirt});
   if(state.skids.length>220)state.skids.shift();
  }
  if(p.drifting){p._driftPoints=(p._driftPoints||0)+dt*Math.min(12,Math.abs(lateral));if(p._driftPoints>=1){const points=Math.floor(p._driftPoints);p.score+=points;p._driftPoints-=points;}}
  // Keep the existing bounded dirt-particle effect.
  if(onDirt&&!p.onBridge&&speed>2.5&&state.now-(p._dustAt||0)>.045){
-  p._dustAt=state.now;const c=Math.cos(p.angle),s=Math.sin(p.angle),dir=p.speed>=0?-1:1;
-  for(const side of [-.78,.78]){const x=p.x+c*dir*1.55-s*side,y=p.y+s*dir*1.55+c*side,j=hash(Math.floor(x*10),Math.floor(y*10),Math.floor(state.now*60))-.5;
+  p._dustAt=state.now;const c=Math.cos(p.angle),s=Math.sin(p.angle),dir=p.speed>=0?-1:1,sides=isMoto?[0]:[-.78,.78],bk=isMoto?1.05:1.55;
+  for(const side of sides){const x=p.x+c*dir*bk-s*side,y=p.y+s*dir*bk+c*side,j=hash(Math.floor(x*10),Math.floor(y*10),Math.floor(state.now*60))-.5;
    state.dust.push({x,y,vx:c*dir*clamp(speed*.18,.6,2.8)-s*j*1.2,vy:s*dir*clamp(speed*.18,.6,2.8)+c*j*1.2,r:.52+clamp(speed/28,0,.48),born:state.now,life:.46+Math.abs(j)*.22,alt:side>0});}
   if(state.dust.length>76)state.dust.splice(0,state.dust.length-76);
  }
@@ -10062,18 +11002,18 @@ function drawPlayerActor(){
   ctx.fillStyle='#38bdf8cc';ctx.beginPath();ctx.moveTo(x+s*.48,y-c*.48);ctx.lineTo(x-c*len,y-s*len);ctx.lineTo(x-s*.48,y+c*.48);ctx.fill();
   ctx.fillStyle='#cffafe';ctx.beginPath();ctx.arc(x,y,.3,0,TAU);ctx.fill();
  }
- drawVehicle25D(p.x,p.y,p.angle,p.color||'#facc15',{isPlayer:true,vkind:p.vkind||'sport',spriteId:p.carId,elev:p.bridgeElev||0,braking,reversing:p.speed<-.35});
+ drawVehicle25D(p.x,p.y,p.angle,p.color||'#facc15',{isPlayer:true,vkind:p.vkind||'sport',spriteId:p.carId,trailerAngle:p.trailerAngle,elev:p.bridgeElev||0,braking,reversing:p.speed<-.35});
 }
 function drawParkedCars(bridges){
  for(const car of state.parkedCars){
   if(Boolean(car.onBridge&&(car.bridgeElev||0)>.35)!==bridges)continue;
-  if(car.x<state.view.minX-12||car.x>state.view.maxX+12||car.y<state.view.minY-12||car.y>state.view.maxY+12)continue;
+  if(car.x<state.view.minX-18||car.x>state.view.maxX+18||car.y<state.view.minY-18||car.y>state.view.maxY+18)continue;
   drawTrafficVehicle(car);
  }
 }
 function drawTrafficVehicle(car){
  // Traffic keeps its exact segment angle without Proxy/Path2D allocation churn on moving vehicles.
- drawVehicle25D(car.x+EXTRUDE_X*(car.bridgeElev||0),car.y+EXTRUDE_Y*(car.bridgeElev||0),car.angle,car.color,{vkind:car.vkind,spriteId:car.carId});
+ drawVehicle25D(car.x+EXTRUDE_X*(car.bridgeElev||0),car.y+EXTRUDE_Y*(car.bridgeElev||0),car.angle,car.color,{vkind:car.vkind,spriteId:car.carId,trailerAngle:car.trailerAngle});
 }
 function updateGameplayHUD(){
  const p=state.player,near=p.onFoot?nearestEnterableVehicle():null,button=$('touchAction');
